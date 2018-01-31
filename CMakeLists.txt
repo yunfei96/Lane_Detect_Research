@@ -12,8 +12,10 @@ find_package( OpenCV REQUIRED )
 #-----------------------add new files in the src in future implementation----------------
 set(src
   #step one
-  ipm.cpp
-  ipm.hpp
+  preprocess.cpp
+  preprocess.hpp
+  #others
+  function.cpp
 )
 #------------------------should not modify below---------------------------------------
 include_directories( ${OpenCV_INCLUDE_DIRS} )
