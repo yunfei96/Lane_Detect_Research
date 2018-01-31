@@ -17,5 +17,5 @@ set(src
 )
 #------------------------should not modify below---------------------------------------
 include_directories( ${OpenCV_INCLUDE_DIRS} )
-add_executable( detect detect.cpp ${src} )
+add_executable( detect detect.cpp detect.hpp ${src} )
 target_link_libraries( detect ${OpenCV_LIBS} )
