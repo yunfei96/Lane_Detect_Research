@@ -9,9 +9,9 @@ preprocess::preprocess(Mat &input)
     //
     filter();
     //
-    toHSV();
+    //toHSV();
     //
-    toBinary();
+    //toBinary();
     //
     IPM();
     //
@@ -57,7 +57,11 @@ void preprocess::IPM()
     Mat lambda( 2, 4, CV_32FC1 );
     //Input and Output Image;
     Mat input, output;
-    int value = 2700;
+    int coValue=0;
+    int value = 286*2;
+    if(value<0){
+        coValue=-value;
+    }
     //Load the image
     input = image;
     // Set the lambda matrix the same type and size as input
@@ -65,21 +69,21 @@ void preprocess::IPM()
     
     // The 4 points that select quadilateral on the input , from top-left in clockwise order
     // These four pts are the sides of the rect box used as input
-    inputQuad[0] = Point2f( -1,0 );
-    inputQuad[1] = Point2f( input.cols+1,0);
-    inputQuad[2] = Point2f( input.cols+value,input.rows+1);
-    inputQuad[3] = Point2f( -value,input.rows+1  );
+    inputQuad[0] = Point2f( 0,0 );
+    inputQuad[1] = Point2f( input.cols,0);
+    inputQuad[2] = Point2f( input.cols-coValue,input.rows+1);
+    inputQuad[3] = Point2f( +coValue,input.rows+1  );
     // The 4 points where the mapping is to be done , from top-left in clockwise order
     outputQuad[0] = Point2f( 0,0 );
     outputQuad[1] = Point2f( input.cols-1,0);
-    outputQuad[2] = Point2f( input.cols-1,input.rows-1);
-    outputQuad[3] = Point2f( 0,input.rows-1  );
+    outputQuad[2] = Point2f( input.cols-value,input.rows-1);
+    outputQuad[3] = Point2f( value,input.rows-1  );
     
     // Get the Perspective Transform Matrix i.e. lambda
     lambda = getPerspectiveTransform( inputQuad, outputQuad );
     // Apply the Perspective Transform just found to the src image
     warpPerspective(input,output,lambda,output.size() );
-    image=output;
+    image = output;
 
 }
 
