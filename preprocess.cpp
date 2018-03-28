@@ -9,9 +9,9 @@ preprocess::preprocess(Mat &input)
     //
     filter();
     //
-    //toHSV();
+    toHSV();
     //
-    //toBinary();
+    toBinary();
     //
     IPM();
     //

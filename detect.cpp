@@ -1,6 +1,5 @@
 #include "detect.hpp"
 #include <fstream>
-
 int main(int argc, char *argv[])
 {
     Mat input;
@@ -19,108 +18,118 @@ int main(int argc, char *argv[])
         cout <<  "Could not open or find the image" << std::endl ;
         return -1;
     }
-    //-----------------------test input----------------------------------
-    //namedWindow("input");
-    //imshow("input", input);
-    //waitKey(0);
-    //----------------------------------------------------------------
     preprocess step1(input);
     Mat result = step1.prep_result();
-    
-    //----------------------get result------------------------------
-    
-    int offset_x = 0;
-    int offset_y = 0;
-    //roi1
-    Rect roi;
-    roi.x = offset_x;
-    roi.y = offset_y;
-    roi.width = result.size().width/2;
-    roi.height = result.size().height/4;
-    Mat result1 = result(roi);
-    //roi2
-    roi.y = result.size().height/4;
-    Mat result2 = result(roi);
-    //roi3
-    roi.y = result.size().height/2;
-    Mat result3 = result(roi);
-    //roi4
-    roi.y = result.size().height* 3/4;
-    Mat result4 = result(roi);
-    //
-    namedWindow("result1");
-    imshow("result1", result1);
-    waitKey(0);
-    namedWindow("result2");
-    imshow("result2", result2);
-    waitKey(0);
-    namedWindow("result3");
-    imshow("result3", result3);
-    waitKey(0);
-    namedWindow("result4");
-    imshow("result4", result4);
-    waitKey(0);
-    //------------------------------------------------------------
-    ofstream myfile;
-    myfile.open("/Users/YunfeiGuo/Desktop/data1.txt");
-    for(int i=0; i<result1.cols; i++)
+    //----------------------get white point------------------------------
+    // left part of the image
+    vector<double> xl;
+    vector<double> yl;
+    vector<double> ll;
+    long kl=0;
+    int lmax = 0;
+    int lmin = 1280;
+    //cols is x
+    //rows is y
+    for(int i=0; i<result.cols/2; i++)
     {
-        for (int j=0; j<result1.rows; j++)
+        for (int j=0; j<result.rows; j++)
         {
-            if(result1.at<bool>(j, i) == true)
+            if(result.at<bool>(j, i) == true)
             {
-                myfile << j << " " << i << endl;
+                if(i>lmax)
+                {
+                    lmax = i;
+                }
+                if(i<lmin)
+                {
+                    lmin = i;
+                }
+                xl.push_back(i);
+                yl.push_back(j);
+                //cout << i << " "<< j << endl;
+                kl++;
             }
         }
     }
-    myfile.close();
-    myfile.open("/Users/YunfeiGuo/Desktop/data2.txt");
-    for(int i=0; i<result2.cols; i++)
+    ll = polyfit(xl,yl);
+    //----------------------right part of the image------------------
+    vector<double> xr;
+    vector<double> yr;
+    vector<double> lr;
+    long kr =0;
+    int rmax = 0;
+    int rmin = 1280;
+    //cols is x
+    //rows is y
+    ofstream out;
+    out.open("/Users/YunfeiGuo/Desktop/data.txt");
+    for(int i=result.cols/2; i<result.cols; i++)
     {
-        for (int j=0; j<result2.rows; j++)
+        for (int j=0; j<result.rows; j++)
         {
-            if(result2.at<bool>(j, i) == true)
+            if(result.at<bool>(j, i) == true)
             {
-                myfile << j+ result.size().height* 1/4 << " " << i << endl;
+                if(i>rmax)
+                {
+                    rmax = i;
+                }
+                if(i<rmin)
+                {
+                    rmin = i;
+                }
+                xr.push_back(i);
+                yr.push_back(j);
+                out << i << " "<< j << "\n";
+                kr++;
             }
         }
     }
-    myfile.close();
-    //
-    myfile.open("/Users/YunfeiGuo/Desktop/data3.txt");
-    for(int i=0; i<result3.cols; i++)
-    {
-        for (int j=0; j<result3.rows; j++)
-        {
-            if(result3.at<bool>(j, i) == true)
-            {
-                myfile << j+ result.size().height* 2/4  << " " << i << endl;
-            }
-        }
-    }
-    myfile.close();
-    //
-    myfile.open("/Users/YunfeiGuo/Desktop/data4.txt");
-    for(int i=0; i<result4.cols; i++)
-    {
-        for (int j=0; j<result4.rows; j++)
-        {
-            if(result4.at<bool>(j, i) == true)
-            {
-                myfile << j + result.size().height* 3/4 << " " << i << endl;
-            }
-        }
-    }
-    myfile.close();
-    //cout << result1.at<int>(1, 1) << endl;;
-    vector<Point2f> list_point(800);
-    for(int i= 100; i< 800; i++)
+    lr = polyfit(xr,yr,1);
+    //-------------------cut into 2 half and find points-----------------------
+    vector<Point2f> list_point(lmax);
+    vector<Point2f> list_right_point(lmax);
+    vector<Point2f> list_left_point(lmax);
+    int a = 0;
+    for(int i= lmin; i< lmax; i++)
     {
         list_point[i].x = i;
-        list_point[i].y = 0.0899*i*i-127.4791*i+44089;
-        
+        list_right_point[i].x = i+a;
+        list_left_point[i].x = i-a;
+        double temp_y = ll[2]*i*i+ll[1]*i+ll[0];
+        list_point[i].y = temp_y;
+        list_right_point[i].y = temp_y;
+        list_left_point[i].y =  temp_y;
+        a++;
     } //draw curve
-    for(int i= 101; i< 800; i++) line(result,list_point[i-1],list_point[i],Scalar(255,0,0),4);
+    for(int i= lmin; i< lmax-1; i++)
+    {
+        line(result,list_point[i],list_point[i+1],Scalar(255,0,0),2);
+        line(result,list_right_point[i],list_right_point[i+1],Scalar(255,255,0),2);
+        line(result,list_left_point[i],list_left_point[i+1],Scalar(255,255,0),2);
+    }
+    //------------------------------right---------------------
+    vector<Point2f> list_pointr(1280);
+    vector<Point2f> list_right_pointr(1280);
+    vector<Point2f> list_left_pointr(1280);
+    int ar = 0;
+    for(int i= rmin; i< 1280; i++)
+    {
+        list_pointr[i].x = i;
+        list_right_pointr[i].x = i+ar;
+        list_left_pointr[i].x = i-ar;
+        double temp_y = lr[1]*i+lr[0];
+        list_pointr[i].y = temp_y;
+        list_right_pointr[i].y = temp_y;
+        list_left_pointr[i].y = temp_y;
+        ar++;
+    } //draw curve
+    for(int i= rmin; i< 1280-1
+        ; i++)
+    {
+        line(result,list_pointr[i],list_pointr[i+1],Scalar(255,0,0),2);
+        //line(result,list_right_pointr[i],list_right_pointr[i+1],Scalar(255,255,0),2);
+        //line(result,list_left_pointr[i],list_left_pointr[i+1],Scalar(255,255,0),2);
+    }
     imshow("image",result);
     waitKey();
     return 0;

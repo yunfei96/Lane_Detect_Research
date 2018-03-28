@@ -9,9 +9,11 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/plot.hpp"
 #include "preprocess.hpp"
-
+#include<cmath>
 using namespace std;
 using namespace cv;
+
+vector<double> polyfit(vector<double> x, vector<double> y, int n=2);
 
 
 
