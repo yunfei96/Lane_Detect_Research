@@ -17,11 +17,16 @@ bool first_frame_img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R){
     imshow("step 1 result",result);
     //waitKey(10);
 #endif
-    vector<vector<double>> white_points = find_white_point(result);
-    vector<double> left_x = white_points[0];
-    vector<double> left_y = white_points[1];
-    vector<double> right_x = white_points[2];
-    vector<double> right_y = white_points[3];
+    //-------------------cut result into half
+	Mat left = result(Rect(0,0, result.cols/2,result.rows));
+    Mat right = result(Rect(result.cols/2,0, result.cols/2, result.rows));
+    //-------------------find white point
+    vector<vector<double>> white_points_l = find_white_point(left);
+    vector<double> left_x = white_points_l[0];
+    vector<double> left_y = white_points_l[1];
+    vector<vector<double>> white_points_r = find_white_point(right);
+    vector<double> right_x = white_points_r[0];
+    vector<double> right_y = white_points_r[1];
     //-----
     //eliminating extreme condition
     if(left_x.size()<=min_first_frame_point_thresh||left_y.size()<=min_first_frame_point_thresh||right_x.size()<=min_first_frame_point_thresh||right_y.size()<=min_first_frame_point_thresh){
