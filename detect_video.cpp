@@ -171,7 +171,7 @@ int main(int argc, char* argv[]){
             
         }
         //-----------------cycle end--------------------
-        waitKey(27);
+        waitKey(0);
         cap>>frame;
     }
     
