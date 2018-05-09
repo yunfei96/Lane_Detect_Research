@@ -157,10 +157,12 @@ int main(int argc, char* argv[]){
             if(!success){
                // isFirstFrame=true;
                 follow_up_fail_count++;
-                if(follow_up_fail_count==1){
+                if(follow_up_fail_count==200){
                     follow_up_fail_count=0;
                     isFirstFrame=true;
                 }
+            }else{
+                follow_up_fail_count=0;
             }
             /*
              缺失部分
@@ -171,7 +173,7 @@ int main(int argc, char* argv[]){
             
         }
         //-----------------cycle end--------------------
-        waitKey(0);
+        waitKey(27);
         cap>>frame;
     }
     

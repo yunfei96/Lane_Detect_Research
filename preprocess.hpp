@@ -14,9 +14,9 @@ private:
     int HighH = 255;
     //smaller S lighter it can go
     int LowS = 0;
-    int HighS = 20;
+    int HighS = 25;
     //smaller V blacker it can go
-    int LowV = 250;
+    int LowV = 240;
     int HighV = 255;
 
 public:

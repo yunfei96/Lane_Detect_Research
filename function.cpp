@@ -5,7 +5,7 @@ bool new_filter_valid_check(Mat _new,Mat _old){
     vector<vector<Point>> contours;
     findContours(mask, contours, RETR_LIST, CHAIN_APPROX_NONE);
     for(int i=0;i<contours.size();i++){
-        if(contours[i].size()<600){
+        if(contours[i].size()<100){
             contours.erase(contours.begin()+i);
         }
     }
