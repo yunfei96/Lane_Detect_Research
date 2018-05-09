@@ -112,43 +112,51 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
 void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y)
 {
     //road
+    //cout << "p0X:" << x[x.size()-1] << "p0Y:" << y[y.size()-1] << endl;
     Point p0(x[x.size()-1], y[y.size()-1]);
-    Point p1(x[x.size()-x.size()*1/16], y[y.size()-x.size()*1/16]);
-    Point p2(x[x.size()-x.size()*2/16], y[y.size()-x.size()*2/16]);
-    Point p3(x[x.size()-x.size()*4/16], y[y.size()-x.size()*4/16]);
-    Point p4(x[x.size()-x.size()*8/16], y[y.size()-x.size()*8/16]);
-    Point p5(x[x.size()-x.size()*14/16], y[y.size() -x.size()*14/16]);
+    Point p1(x[x.size()-x.size()*2/16-1], y[y.size()-x.size()*2/16-1]);
+    Point p2(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
+    Point p3(x[x.size()-x.size()*4/16-1], y[y.size()-x.size()*4/16-1]);
+    Point p4(x[x.size()-x.size()*8/16-1], y[y.size()-x.size()*8/16-1]);
+    Point p5(x[x.size()-x.size()*14/16-1], y[y.size() -x.size()*14/16-1]);
     Point p6(x[0],y[0]);
     Point p7(0,0);
     if(p6.y != 0)
         
     {
         //find dy/dx
-        double dy = p6.y-p2.y;
-        double dx = p6.x-p2.x;
-        double dydx = dy/dx;
-        double b = p6.y -dydx*p6.x;
-        double hit = -b/dydx;
-        p7.x = hit;
+        double dy = p6.y-p3.y;
+        double dx = p6.x-p3.x;
+        if(dx != 0)
+        {
+            double dydx = dy/dx;
+            double b = p6.y -dydx*p6.x;
+            double hit = -b/dydx;
+            p7.x = hit;
+        }
+        else
+        {
+            p7.x = p3.x;
+        }
     }
     //left line
     Point left_sp0 = p0;
     Point left_sp1(p1.x - 5, p1.y);
-    Point left_sp2(p2.x - 7,p2.y);
-    Point left_sp3(p3.x - 8,p3.y);
-    Point left_sp4(p4.x - 10,p4.y);
-    Point left_sp5(p5.x - 15,p5.y);
-    Point left_sp6(p6.x - 15,p6.y);
-    Point left_sp7(p7.x - 20,p7.y);
+    Point left_sp2(p2.x - 6,p2.y);
+    Point left_sp3(p3.x - 7,p3.y);
+    Point left_sp4(p4.x - 8,p4.y);
+    Point left_sp5(p5.x - 9,p5.y);
+    Point left_sp6(p6.x - 10,p6.y);
+    Point left_sp7(p7.x - 11,p7.y);
     //right line
     Point right_sp0 = p0;
     Point right_sp1(p1.x + 5, p1.y);
-    Point right_sp2(p2.x + 7,p2.y);
-    Point right_sp3(p3.x + 8,p3.y);
-    Point right_sp4(p4.x + 10,p4.y);
-    Point right_sp5(p5.x + 15,p5.y);
-    Point right_sp6(p6.x + 15,p6.y);
-    Point right_sp7(p7.x + 20,p7.y);
+    Point right_sp2(p2.x + 6,p2.y);
+    Point right_sp3(p3.x + 7,p3.y);
+    Point right_sp4(p4.x + 8,p4.y);
+    Point right_sp5(p5.x + 9,p5.y);
+    Point right_sp6(p6.x + 10,p6.y);
+    Point right_sp7(p7.x + 11,p7.y);
     //draw the line
     /*
     line(image, p0, p1, cv::Scalar(255,0,0), 2);
