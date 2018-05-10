@@ -16,12 +16,12 @@ private:
     int LowS = 0;
     int HighS = 25;
     //smaller V blacker it can go
-    int LowV = 240;
+    int LowV = 245;
     int HighV = 255;
 
 public:
     //constructor
-    preprocess(Mat &input);
+    void process(Mat &input, int LowH = 0, int HighH = 255, int LowS =0, int HighS=28, int LowV=243, int HighV=255);
     
     //to HSV, make it easier to set up threshold
     void toHSV();

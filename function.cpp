@@ -19,11 +19,11 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
     //----------------------get white point------------------------------
     vector<double> x_left;
     vector<double> y_left;
-    int left_max = 0;
-    int left_min = 1280;
     //cols is x, rows is y
     for(int i=0; i<result.rows; i++)
     {
+        int left_max = 0;
+        int left_min = 1280;
         int white_number = 0;
         vector<double> tempx;
         vector<double> tempy;
@@ -49,7 +49,7 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
             }
         }
         //find the mean
-        if(white_number/2 < tempy.size())
+        if(white_number/2 < tempy.size()&&(left_max-left_min <= 5))
         {
             //out << tempx[white_number/2] << " ";
             //out << tempy[white_number/2] << endl;
@@ -61,11 +61,11 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
     //----------------------right part of the image------------------
     vector<double> x_right;
     vector<double> y_right;
-    int right_max = 0;
-    int right_min = 1280;
     //cols is x, rows is y
     for(int i=0; i<result.rows; i++)
     {
+        int right_max = 0;
+        int right_min = 1280;
         int white_number = 0;
         vector<double> tempx;
         vector<double> tempy;
@@ -91,7 +91,7 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
             }
         }
         //find the mean
-        if(white_number/2 < tempy.size())
+        if(white_number/2 < tempy.size()&&(right_max-right_min <= 5))
         {
             //out << tempx[white_number/2] << " ";
             //out << tempy[white_number/2] << endl;
@@ -113,7 +113,12 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
 {
     //road
     //cout << "p0X:" << x[x.size()-1] << "p0Y:" << y[y.size()-1] << endl;
+    
     Point p0(x[x.size()-1], y[y.size()-1]);
+    if(p0.y < image.rows-10)
+    {
+        p0.y = p0.y+5;
+    }
     Point p1(x[x.size()-x.size()*2/16-1], y[y.size()-x.size()*2/16-1]);
     Point p2(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
     Point p3(x[x.size()-x.size()*4/16-1], y[y.size()-x.size()*4/16-1]);
@@ -121,22 +126,44 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     Point p5(x[x.size()-x.size()*14/16-1], y[y.size() -x.size()*14/16-1]);
     Point p6(x[0],y[0]);
     Point p7(0,0);
+    //if highest point is not reach top
     if(p6.y != 0)
-        
     {
-        //find dy/dx
-        double dy = p6.y-p3.y;
-        double dx = p6.x-p3.x;
-        if(dx != 0)
+        //if highest point is high enough and direct link the to the top
+        if(p6.y < 20)
         {
-            double dydx = dy/dx;
-            double b = p6.y -dydx*p6.x;
-            double hit = -b/dydx;
-            p7.x = hit;
+            //find dy/dx
+            double dy = p6.y-p4.y;
+            double dx = p6.x-p4.x;
+            if(dx != 0)
+            {
+                double k = dy/dx;
+                double b = p6.y -k*p6.x;
+                double x_predict = -b/k;
+                p7.x = x_predict;
+            }
+            else
+            {
+                p7.x = p6.x;
+            }
         }
         else
         {
-            p7.x = p3.x;
+            p7.y = p6.y -20;
+            //find dy/dx
+            double dy = p6.y-p4.y;
+            double dx = p6.x-p4.x;
+            if(dx != 0)
+            {
+                double k = dy/dx;
+                double b = p6.y -k*p6.x;
+                double x_predict = (p7.y-b)/k;
+                p7.x = x_predict;
+            }
+            else
+            {
+                p7.x = p6.x;
+            }
         }
     }
     //left line
@@ -145,18 +172,18 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     Point left_sp2(p2.x - 6,p2.y);
     Point left_sp3(p3.x - 7,p3.y);
     Point left_sp4(p4.x - 8,p4.y);
-    Point left_sp5(p5.x - 9,p5.y);
-    Point left_sp6(p6.x - 10,p6.y);
-    Point left_sp7(p7.x - 11,p7.y);
+    Point left_sp5(p5.x - 10,p5.y);
+    Point left_sp6(p6.x - 15,p6.y);
+    Point left_sp7(p7.x - 20,p7.y);
     //right line
     Point right_sp0 = p0;
     Point right_sp1(p1.x + 5, p1.y);
     Point right_sp2(p2.x + 6,p2.y);
     Point right_sp3(p3.x + 7,p3.y);
     Point right_sp4(p4.x + 8,p4.y);
-    Point right_sp5(p5.x + 9,p5.y);
-    Point right_sp6(p6.x + 10,p6.y);
-    Point right_sp7(p7.x + 11,p7.y);
+    Point right_sp5(p5.x + 10,p5.y);
+    Point right_sp6(p6.x + 15,p6.y);
+    Point right_sp7(p7.x + 20,p7.y);
     //draw the line
     /*
     line(image, p0, p1, cv::Scalar(255,0,0), 2);
@@ -190,5 +217,9 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     if(p6.y != 0)
     {
         line(image, right_sp6, right_sp7, cv::Scalar(255,255,0), 2);
+    }
+    if(p6.y != 0 && p6.y >= 20)
+    {
+         line(image, right_sp7, left_sp7, cv::Scalar(255,255,0), 2);
     }
 }

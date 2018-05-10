@@ -1,13 +1,20 @@
 #include "preprocess.hpp"
 
 //constructor
-preprocess::preprocess(Mat &input)
+void preprocess::process(Mat &input, int LowH, int HighH, int LowS, int HighS, int LowV, int HighV)
 {
+    this->LowH = LowH;
+    this->HighH = HighH;
+    //smaller S lighter it can go
+    this->LowS = LowS;
+    this->HighS = HighS;
+    //smaller V blacker it can go
+    this->LowV = LowV;
+    this->HighV = HighV;
     //resize the image
     resize(input, input, Size(1280,720));
     image = input(Rect(0, input.rows / 2, input.cols, input.rows / 2 - 50));
-    image = image(Rect(0, image.rows / 5, image.cols, image.rows / 5 * 4 ));
-    //
+    //image = image(Rect(0, image.rows / 5, image.cols, image.rows / 5 * 4 ));
     origin_image = IPM(image);
     //
     filter();
@@ -46,7 +53,7 @@ void preprocess::toHSV()
 void preprocess::filter()
 {
     Mat bluredImg;
-    //GaussianBlur(image, bluredImg, Size( 5, 5 ), 0, 0 );
+    //GaussianBlur(image, bluredImg, Size( 2, 2 ), 0, 0 );
     blur(image, bluredImg, Size( 5, 5 ));
     image=bluredImg;
 }
@@ -63,7 +70,7 @@ Mat preprocess::IPM(Mat input)
     //Input and Output Image;
     Mat output;
     int coValue=0;
-    int value = 245*2;
+    int value = 286*2;
     if(value<0){
         coValue=-value;
     }

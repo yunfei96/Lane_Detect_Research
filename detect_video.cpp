@@ -14,8 +14,17 @@ const int min_first_frame_point_thresh = 3;
 
 
 
-bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst){
-    preprocess step1(src);
+bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
+{
+    preprocess step1;
+    if(isFirst)
+    {
+        step1.process(src,0,255,0,15,250,255);
+    }
+    else
+    {
+        step1.process(src);
+    }
     Mat result = step1.prep_result();
 
 #ifdef DEBUG_MODE
@@ -173,7 +182,7 @@ int main(int argc, char* argv[]){
             
         }
         //-----------------cycle end--------------------
-        waitKey(27);
+        waitKey(0);
         cap>>frame;
     }
     
