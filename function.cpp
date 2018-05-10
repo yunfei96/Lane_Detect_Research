@@ -49,7 +49,7 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
             }
         }
         //find the mean
-        if(white_number/2 < tempy.size()&&(left_max-left_min <= 5))
+        if(white_number/2 < tempy.size()&&(left_max-left_min <= 6))
         {
             //out << tempx[white_number/2] << " ";
             //out << tempy[white_number/2] << endl;
@@ -91,7 +91,7 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
             }
         }
         //find the mean
-        if(white_number/2 < tempy.size()&&(right_max-right_min <= 5))
+        if(white_number/2 < tempy.size()&&(right_max-right_min <= 6))
         {
             //out << tempx[white_number/2] << " ";
             //out << tempy[white_number/2] << endl;
@@ -173,8 +173,8 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     Point left_sp3(p3.x - 7,p3.y);
     Point left_sp4(p4.x - 8,p4.y);
     Point left_sp5(p5.x - 10,p5.y);
-    Point left_sp6(p6.x - 15,p6.y);
-    Point left_sp7(p7.x - 20,p7.y);
+    Point left_sp6(p6.x - 13,p6.y);
+    Point left_sp7(p7.x - 16,p7.y);
     //right line
     Point right_sp0 = p0;
     Point right_sp1(p1.x + 5, p1.y);
@@ -182,8 +182,8 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     Point right_sp3(p3.x + 7,p3.y);
     Point right_sp4(p4.x + 8,p4.y);
     Point right_sp5(p5.x + 10,p5.y);
-    Point right_sp6(p6.x + 15,p6.y);
-    Point right_sp7(p7.x + 20,p7.y);
+    Point right_sp6(p6.x + 13,p6.y);
+    Point right_sp7(p7.x + 16,p7.y);
     //draw the line
     /*
     line(image, p0, p1, cv::Scalar(255,0,0), 2);

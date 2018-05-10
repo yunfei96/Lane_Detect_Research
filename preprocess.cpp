@@ -1,5 +1,76 @@
 #include "preprocess.hpp"
 
+const int CONTOURS_POINT_COUNT_THRESHOLD=300;
+
+void findDrawContours(Mat&src,Mat&dst){
+    src.copyTo(dst);
+    dst.setTo(0);
+    vector<vector<Point> > contours;
+    Mat cannyed;
+    Canny(src,cannyed,240,255);
+    findContours(cannyed, contours, RETR_LIST, CHAIN_APPROX_NONE);
+    for(int i=0;i<contours.size();i++){
+        if(contours[i].size()<CONTOURS_POINT_COUNT_THRESHOLD){
+            continue;
+        }
+        drawContours(dst,contours,i,255,5);
+        
+    }
+    
+}
+
+void drawFit(vector<vector<Point>> contours,Mat&dst){
+    for(int i=0;i<contours.size();i++){
+        if(contours[i].size()<CONTOURS_POINT_COUNT_THRESHOLD){
+            continue;
+        }
+        Vec4f rst;
+        fitLine(contours[i], rst, CV_DIST_L2, 0, 0.01,0.01);
+        //y=(dy/dx)*x+c;
+        //rst[3]=(rst[1]/rst[0])*rst[2]+c;
+        int c=rst[3]-(rst[1]/rst[0])*rst[2];
+        //x=(y-c)/(rst[1]/rst[0])
+        int y1=dst.rows;
+        int y2=0;
+        
+        if(contours[i][0].y<dst.rows/3){
+            y1=dst.rows/3;
+        }else if(contours[i][0].y<dst.rows/3*2){
+            y1=dst.rows/3*2;
+            y2=dst.rows/3;
+        }else{
+            y2=dst.rows/3*2;
+        }
+        
+        int x1=(y1-c)/(rst[1]/rst[0]);
+        int x2=(y2-c)/(rst[1]/rst[0]);
+        line(dst,Point(x1,y1),Point(x2,y2),Scalar(255,0,255),5);
+    }
+}
+
+
+void confirmation_filter_producer(Mat src,Mat&dst){
+    
+    Mat contoursImg;
+    Mat contoursImg2;
+    Mat newFilter(Size(src.cols,src.rows),CV_8UC1,Scalar(0));
+    
+    cvtColor(src,contoursImg,CV_BGR2GRAY);
+    findDrawContours(contoursImg,contoursImg2);
+    dst=contoursImg2;
+    //imshow("contImg2",contoursImg2);
+    
+   /* line(contoursImg2,Point(0,contoursImg2.rows/3),Point(contoursImg2.cols,contoursImg2.rows/3),0,2);
+    line(contoursImg2,Point(0,contoursImg2.rows/3*2),Point(contoursImg2.cols,contoursImg2.rows/3*2),0,2);
+    vector<vector<Point>>  contours2;
+    findContours(contoursImg2, contours2, RETR_LIST, CHAIN_APPROX_NONE);
+    drawFit(contours2,newFilter);
+    
+    inRange(newFilter,Scalar(250),Scalar(255),newFilter);
+    dst=newFilter;*/
+    
+}
+
 //constructor
 void preprocess::process(Mat &input, int LowH, int HighH, int LowS, int HighS, int LowV, int HighV)
 {
@@ -15,7 +86,7 @@ void preprocess::process(Mat &input, int LowH, int HighH, int LowS, int HighS, i
     resize(input, input, Size(1280,720));
     image = input(Rect(0, input.rows / 2, input.cols, input.rows / 2 - 50));
     //image = image(Rect(0, image.rows / 5, image.cols, image.rows / 5 * 4 ));
-    origin_image = IPM(image);
+    image.copyTo(origin_image);
     //
     filter();
     //
@@ -24,6 +95,8 @@ void preprocess::process(Mat &input, int LowH, int HighH, int LowS, int HighS, i
     toBinary();
     //
     image = IPM(image);
+    //
+    origin_image = IPM(origin_image);
     //
     refine();
     //-----------show image----------
@@ -110,7 +183,11 @@ void preprocess::toBinary()
     
     //close morph
     morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
-    image=imgThresholded;
+    Mat cfilter;
+    confirmation_filter_producer(origin_image, cfilter);
+    imshow("confirmation filter",cfilter);
+    image=imgThresholded&cfilter;
+    //image=cfilter;
 }
 
 //change the threshold based on output

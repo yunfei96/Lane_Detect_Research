@@ -14,14 +14,15 @@ private:
     int HighH = 255;
     //smaller S lighter it can go
     int LowS = 0;
-    int HighS = 25;
+    int HighS = 40;
     //smaller V blacker it can go
-    int LowV = 245;
+    int LowV = 199;
     int HighV = 255;
 
 public:
     //constructor
-    void process(Mat &input, int LowH = 0, int HighH = 255, int LowS =0, int HighS=28, int LowV=243, int HighV=255);
+    void process(Mat &input, int LowH = 0, int HighH = 255, int LowS =0, int HighS=28, int LowV=199
+                 , int HighV=255);
     
     //to HSV, make it easier to set up threshold
     void toHSV();
