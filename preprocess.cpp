@@ -143,7 +143,7 @@ Mat preprocess::IPM(Mat input)
     //Input and Output Image;
     Mat output;
     int coValue=0;
-    int value = 240*2;
+    int value = 230*2;
     if(value<0){
         coValue=-value;
     }
