@@ -49,7 +49,7 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
             }
         }
         //find the mean
-        if(white_number/2 < tempy.size()&&(left_max-left_min <= 6))
+        if(white_number/2 < tempy.size()&&(left_max-left_min <= 50))
         {
             //out << tempx[white_number/2] << " ";
             //out << tempy[white_number/2] << endl;
@@ -91,7 +91,7 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
             }
         }
         //find the mean
-        if(white_number/2 < tempy.size()&&(right_max-right_min <= 6))
+        if(white_number/2 < tempy.size()&&(right_max-right_min <= 50))
         {
             //out << tempx[white_number/2] << " ";
             //out << tempy[white_number/2] << endl;
@@ -115,9 +115,9 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     //cout << "p0X:" << x[x.size()-1] << "p0Y:" << y[y.size()-1] << endl;
     
     Point p0(x[x.size()-1], y[y.size()-1]);
-    if(p0.y < image.rows-10)
+    if(p0.y < image.rows-20)
     {
-        p0.y = p0.y+5;
+        p0.y = p0.y+15;
     }
     Point p1(x[x.size()-x.size()*2/16-1], y[y.size()-x.size()*2/16-1]);
     Point p2(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
@@ -130,7 +130,7 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     if(p6.y != 0)
     {
         //if highest point is high enough and direct link the to the top
-        if(p6.y < 20)
+        if(p6.y < 60)
         {
             //find dy/dx
             double dy = p6.y-p4.y;
@@ -149,7 +149,7 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
         }
         else
         {
-            p7.y = p6.y -20;
+            p7.y = p6.y -60;
             //find dy/dx
             double dy = p6.y-p4.y;
             double dx = p6.x-p4.x;
@@ -218,7 +218,7 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     {
         line(image, right_sp6, right_sp7, cv::Scalar(255,255,0), 2);
     }
-    if(p6.y != 0 && p6.y >= 20)
+    if(p6.y != 0 && p6.y >= 60)
     {
          line(image, right_sp7, left_sp7, cv::Scalar(255,255,0), 2);
     }

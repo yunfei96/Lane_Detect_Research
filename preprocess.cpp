@@ -85,7 +85,7 @@ void preprocess::process(Mat &input, int LowH, int HighH, int LowS, int HighS, i
     //resize the image
     resize(input, input, Size(1280,720));
     image = input(Rect(0, input.rows / 2, input.cols, input.rows / 2 - 50));
-    //image = image(Rect(0, image.rows / 5, image.cols, image.rows / 5 * 4 ));
+    image = image(Rect(0, image.rows / 5, image.cols, image.rows / 5 * 4 ));
     image.copyTo(origin_image);
     //
     filter();
@@ -143,7 +143,7 @@ Mat preprocess::IPM(Mat input)
     //Input and Output Image;
     Mat output;
     int coValue=0;
-    int value = 286*2;
+    int value = 240*2;
     if(value<0){
         coValue=-value;
     }
