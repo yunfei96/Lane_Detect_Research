@@ -4,13 +4,18 @@
 //
 //  Created by Jason Lu on 4/19/18.
 //
-
+//#define RECORD_RST 1
 #include "detect.hpp"
 const int min_first_frame_point_thresh = 3;
 
 #ifdef VIDEO_MODE
 
+#ifdef RECORD_RST
 
+VideoWriter output;
+const string NAME="Output.avi";
+
+#endif
 
 
 
@@ -28,7 +33,7 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     Mat result = step1.prep_result();
 
 #ifdef DEBUG_MODE
-    imshow("step 1 result",result);
+    //imshow("step 1 result",result);
     //waitKey(10);
 #endif
 
@@ -40,8 +45,8 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     if(!isFirst){
         Mat rstl=result&filter_frame_L;
         Mat rstr=result&filter_frame_R;
-        imshow("filtered L",rstl);
-        imshow("filtered R",rstr);
+        //imshow("filtered L",rstl);
+        //imshow("filtered R",rstr);
         white_points=find_white_point(rstl, false);
         left_x = white_points[0];
         left_y = white_points[1];
@@ -96,7 +101,11 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     imshow("image",step1.origin_image);
     //waitKey(10);
 #endif
-    
+#ifdef RECORD_RST
+    Mat out;
+    resize(step1.origin_image, out, Size(1280,288));
+    output<<out;
+#endif
     return true;
 }
 
@@ -127,8 +136,14 @@ int main(int argc, char* argv[]){
         return EXIT_FAILURE;   //if the video stream is failed to open.
     }
     
+
+    
     Mat frame;
     cap>>frame;
+#ifdef RECORD_RST
+    Size S = Size(1280,288);
+    output.open(NAME, -1, 25, S, true);
+#endif
     int emptyFrameCount=0;
     bool isFirstFrame=true;
     Mat filter_frame_L,filter_frame_R;
@@ -152,8 +167,8 @@ int main(int argc, char* argv[]){
             if(success){
                 isFirstFrame=false;
 #ifdef DEBUG_MODE
-                //imshow("filter frame l", filter_frame_L);
-                //imshow("filter frame r", filter_frame_R);
+                imshow("filter frame l", filter_frame_L);
+                imshow("filter frame r", filter_frame_R);
                 waitKey(0);
 #endif
             }
@@ -182,10 +197,16 @@ int main(int argc, char* argv[]){
             
         }
         //-----------------cycle end--------------------
-        waitKey(0);
+        //imshow("rst",frame);
+        waitKey(1);
         cap>>frame;
     }
+#ifdef RECORD_RST
     
+    output.release();
+#endif
+    
+    return 0;
 }
 
 #endif
