@@ -9,6 +9,7 @@
 #include "opencv2/imgproc.hpp"
 //#include "opencv2/plot.hpp"
 #include "preprocess.hpp"
+#include "NextFrameFilters.hpp"
 #include<cmath>
 
 //if the program is in video mode, define VIDEO_MODE
