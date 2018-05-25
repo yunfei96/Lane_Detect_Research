@@ -145,7 +145,6 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     {
         //if highest point is high enough and direct link the to the top
         if(p6.y < 80)
-        if(p6.y < 50)
         {
             //find dy/dx
             double dy = p6.y-p4.y;
@@ -165,7 +164,6 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
         else
         {
             p7.y = p6.y -80;
-            p7.y = p6.y -50;
             //find dy/dx
             double dy = p6.y-p4.y;
             double dx = p6.x-p4.x;
@@ -235,7 +233,6 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
         line(image, right_sp6, right_sp7, cv::Scalar(255,255,0), 2);
     }
     if(p6.y != 0 && p6.y >= 80)
-    if(p6.y != 0 && p6.y >= 50)
     {
          line(image, right_sp7, left_sp7, cv::Scalar(255,255,0), 2);
     }
