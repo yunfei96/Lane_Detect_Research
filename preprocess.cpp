@@ -13,7 +13,7 @@ void findDrawContours(Mat&src,Mat&dst){
         if(contours[i].size()<CONTOURS_POINT_COUNT_THRESHOLD){
             continue;
         }
-        drawContours(dst,contours,i,255,5);
+        drawContours(dst,contours,i,255,10);
         
     }
     
@@ -90,7 +90,7 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
     //resize the image
     resize(input, input, Size(1280,720));
     image = input(Rect(0, input.rows / 2, input.cols, input.rows / 2 - 50));
-    image = image(Rect(0, image.rows / 5, image.cols, image.rows / 5 * 4 ));
+    //image = image(Rect(0, image.rows / 5, image.cols, image.rows / 5 * 4 ));
     image.copyTo(origin_image);
     //
     filter();

@@ -183,21 +183,21 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     //left line
     Point left_sp0(p0.x, p0.y);
     Point left_sp1(p1.x - 5, p1.y);
-    Point left_sp2(p2.x - 5,p2.y);
-    Point left_sp3(p3.x - 5,p3.y);
-    Point left_sp4(p4.x - 5,p4.y);
-    Point left_sp5(p5.x - 5,p5.y);
-    Point left_sp6(p6.x - 5,p6.y);
-    Point left_sp7(p7.x - 5,p7.y);
+    Point left_sp2(p2.x - 6,p2.y);
+    Point left_sp3(p3.x - 8,p3.y);
+    Point left_sp4(p4.x - 10,p4.y);
+    Point left_sp5(p5.x - 10,p5.y);
+    Point left_sp6(p6.x - 10,p6.y);
+    Point left_sp7(p7.x - 10,p7.y);
     //right line
     Point right_sp0(p0.x, p0.y);
     Point right_sp1(p1.x + 5, p1.y);
-    Point right_sp2(p2.x + 5,p2.y);
-    Point right_sp3(p3.x + 5,p3.y);
-    Point right_sp4(p4.x + 5,p4.y);
-    Point right_sp5(p5.x + 5,p5.y);
-    Point right_sp6(p6.x + 5,p6.y);
-    Point right_sp7(p7.x + 5,p7.y);
+    Point right_sp2(p2.x + 6,p2.y);
+    Point right_sp3(p3.x + 8,p3.y);
+    Point right_sp4(p4.x + 10,p4.y);
+    Point right_sp5(p5.x + 10,p5.y);
+    Point right_sp6(p6.x + 10,p6.y);
+    Point right_sp7(p7.x + 10,p7.y);
     //draw the line
     /*
     line(image, p0, p1, cv::Scalar(255,0,0), 2);
