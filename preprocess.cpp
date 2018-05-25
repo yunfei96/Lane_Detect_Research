@@ -1,6 +1,6 @@
 #include "preprocess.hpp"
 
-const int CONTOURS_POINT_COUNT_THRESHOLD=300;
+const int CONTOURS_POINT_COUNT_THRESHOLD=100;
 
 void findDrawContours(Mat&src,Mat&dst){
     src.copyTo(dst);
@@ -55,9 +55,14 @@ void confirmation_filter_producer(Mat src,Mat&dst){
     Mat contoursImg2;
     Mat newFilter(Size(src.cols,src.rows),CV_8UC1,Scalar(0));
     
-    cvtColor(src,contoursImg,CV_BGR2GRAY);
-    findDrawContours(contoursImg,contoursImg2);
-    dst=contoursImg2;
+    cvtColor(src,contoursImg,CV_BGR2HSV);
+    vector<Mat> hsvSpl;
+    split(contoursImg, hsvSpl);
+    Mat s,v;
+    findDrawContours(hsvSpl[0],contoursImg2);
+    findDrawContours(hsvSpl[1],s);
+    findDrawContours(hsvSpl[2],v);
+    dst=contoursImg2|s|v;
     //imshow("contImg2",contoursImg2);
     
    /* line(contoursImg2,Point(0,contoursImg2.rows/3),Point(contoursImg2.cols,contoursImg2.rows/3),0,2);
@@ -72,7 +77,7 @@ void confirmation_filter_producer(Mat src,Mat&dst){
 }
 
 //constructor
-void preprocess::process(Mat &input, int LowH, int HighH, int LowS, int HighS, int LowV, int HighV)
+void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS, int HighS, int LowV, int HighV )
 {
     this->LowH = LowH;
     this->HighH = HighH;
@@ -92,7 +97,7 @@ void preprocess::process(Mat &input, int LowH, int HighH, int LowS, int HighS, i
     //
     toHSV();
     //
-    toBinary();
+    toBinary(isFirst);
     //
     image = IPM(image);
     //
@@ -170,7 +175,7 @@ Mat preprocess::IPM(Mat input)
 }
 
 //use threshold to change into binary image
-void preprocess::toBinary()
+void preprocess::toBinary(bool isfirst)
 {
     Mat imgThresholded;
     
@@ -186,7 +191,8 @@ void preprocess::toBinary()
     Mat cfilter;
     confirmation_filter_producer(origin_image, cfilter);
     imshow("confirmation filter",cfilter);
-    image=imgThresholded&cfilter;
+    
+    image=isfirst?imgThresholded&cfilter:cfilter;
     //image=cfilter;
 }
 

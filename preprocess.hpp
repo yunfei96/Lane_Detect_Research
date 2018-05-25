@@ -21,8 +21,8 @@ private:
 
 public:
     //constructor
-    void process(Mat &input, int LowH = 0, int HighH = 255, int LowS =0, int HighS=28, int LowV=199
-                 , int HighV=255);
+    void process(bool isFirst, Mat &input, int LowH = 0, int HighH = 255, int LowS =0, int HighS=28, int LowV=199
+                 , int HighV=255 );
     
     //to HSV, make it easier to set up threshold
     void toHSV();
@@ -34,7 +34,7 @@ public:
     Mat IPM(Mat input);
     
     //use threshold to change into binary image
-    void toBinary();
+    void toBinary(bool isfirst);
     
     //change the threshold based on output
     void refine();

@@ -24,11 +24,11 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     preprocess step1;
     if(isFirst)
     {
-        step1.process(src,0,255,0,15,250,255);
+        step1.process(isFirst,src, 0,255,0,15,250,255);
     }
     else
     {
-        step1.process(src);
+        step1.process(isFirst, src,isFirst);
     }
     Mat result = step1.prep_result();
 
