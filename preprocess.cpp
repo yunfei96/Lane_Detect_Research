@@ -7,7 +7,7 @@ void findDrawContours(Mat&src,Mat&dst){
     dst.setTo(0);
     vector<vector<Point> > contours;
     Mat cannyed;
-    Canny(src,cannyed,240,255);
+    Canny(src,cannyed,170,255);
     findContours(cannyed, contours, RETR_LIST, CHAIN_APPROX_NONE);
     for(int i=0;i<contours.size();i++){
         if(contours[i].size()<CONTOURS_POINT_COUNT_THRESHOLD){
@@ -122,7 +122,7 @@ void preprocess::toHSV()
     //Convert the captured frame from BGR to HSV
     cvtColor(image, imgHSV, COLOR_BGR2HSV);
     split(imgHSV, hsvSplit);
-    equalizeHist(hsvSplit[2],hsvSplit[2]);
+    //equalizeHist(hsvSplit[2],hsvSplit[2]);
     merge(hsvSplit,imgHSV);
     image = imgHSV;
 }
