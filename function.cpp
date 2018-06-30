@@ -4,22 +4,25 @@ bool new_filter_valid_check(Mat _new,Mat _old){
     Mat mask=_new&_old;
     vector<vector<Point>> contours;
     findContours(mask, contours, RETR_LIST, CHAIN_APPROX_NONE);
-    for(int i=0;i<contours.size();i++){
-        if(contours[i].size()<100){
+    for(int i=0;i<contours.size();i++)
+    {
+        if(contours[i].size()<100)
+        {
             contours.erase(contours.begin()+i);
         }
     }
     return contours.size()>=1;
 }
 
-
-
+//in first frame, cut the whole image vertically into 2 parts
+//else use the whole image
 vector<vector<double>> find_white_point(Mat result, bool isFirst)
 {
-    //----------------------get white point------------------------------
+    //get white point
     vector<double> x_left;
     vector<double> y_left;
     //cols is x, rows is y
+    //--------------------left part of the image-----------------
     for(int i=0; i<result.rows; i++)
     {
         int left_max = 0;
@@ -28,7 +31,8 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
         vector<double> tempx;
         vector<double> tempy;
         int x_dir_lim=result.cols/2;
-        if(!isFirst){
+        if(!isFirst)
+        {
             x_dir_lim=result.cols;
         }
         for (int j=0; j<x_dir_lim; j++)
@@ -51,8 +55,6 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
         //find the mean
         if(white_number/2 < tempy.size()&&(left_max-left_min <= 500))
         {
-            //out << tempx[white_number/2] << " ";
-            //out << tempy[white_number/2] << endl;
             x_left.push_back(tempx[white_number/2]);
             y_left.push_back(tempy[white_number/2]);
         }
@@ -93,14 +95,10 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
         //find the mean
         if(white_number/2 < tempy.size()&&(right_max-right_min <= 500))
         {
-            //out << tempx[white_number/2] << " ";
-            //out << tempy[white_number/2] << endl;
             x_right.push_back(tempx[white_number/2]);
             y_right.push_back(tempy[white_number/2]);
         }
     }
-    //lr = polyfit(xr,yr,2);
-
     vector<vector<double>> return_vector;
     return_vector.push_back(x_left);
     return_vector.push_back(y_left);
@@ -109,10 +107,10 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
     return return_vector;
 }
 
+//draw area of interest. Make the area an enclosed area
 void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y)
 {
-    //road
-    
+    //find 8 points and link these points together
     Point p0(x[x.size()-1], y[y.size()-1]);
     Point p1(x[x.size()-x.size()*2/16-1], y[y.size()-x.size()*2/16-1]);
     Point p2(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
@@ -121,7 +119,7 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     Point p5(x[x.size()-x.size()*14/16-1], y[y.size() -x.size()*14/16-1]);
     Point p6(x[0],y[0]);
     Point p7(0,0);
-    //
+    //extend to bottom of the image
     if(p0.y < image.rows-20)
     {
         //find dy/dx
@@ -140,6 +138,7 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
             p0.y = p0.y+7;
         }
     }
+    //extend to top of the image
     //if highest point is not reach top
     if(p6.y != 0)
     {
@@ -211,29 +210,29 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
         line(image, p6, p7, cv::Scalar(255,0,0), 2);
     }*/
     //draw left line
-    line(image, left_sp0, left_sp1, cv::Scalar(255,255,0), 2);
-    line(image, left_sp1, left_sp2, cv::Scalar(255,255,0), 2);
-    line(image, left_sp2, left_sp3, cv::Scalar(255,255,0), 2);
-    line(image, left_sp3, left_sp4, cv::Scalar(255,255,0), 2);
-    line(image, left_sp4, left_sp5, cv::Scalar(255,255,0), 2);
-    line(image, left_sp5, left_sp6, cv::Scalar(255,255,0), 2);
+    line(image, left_sp0, left_sp1, Scalar(255,255,0), 2);
+    line(image, left_sp1, left_sp2, Scalar(255,255,0), 2);
+    line(image, left_sp2, left_sp3, Scalar(255,255,0), 2);
+    line(image, left_sp3, left_sp4, Scalar(255,255,0), 2);
+    line(image, left_sp4, left_sp5, Scalar(255,255,0), 2);
+    line(image, left_sp5, left_sp6, Scalar(255,255,0), 2);
     if(p6.y != 0)
     {
-        line(image, left_sp6, left_sp7, cv::Scalar(255,255,0), 2);
+        line(image, left_sp6, left_sp7, Scalar(255,255,0), 2);
     }
     //draw right line
-    line(image, right_sp0, right_sp1, cv::Scalar(255,255,0), 2);
-    line(image, right_sp1, right_sp2, cv::Scalar(255,255,0), 2);
-    line(image, right_sp2, right_sp3, cv::Scalar(255,255,0), 2);
-    line(image, right_sp3, right_sp4, cv::Scalar(255,255,0), 2);
-    line(image, right_sp4, right_sp5, cv::Scalar(255,255,0), 2);
-    line(image, right_sp5, right_sp6, cv::Scalar(255,255,0), 2);
+    line(image, right_sp0, right_sp1, Scalar(255,255,0), 2);
+    line(image, right_sp1, right_sp2, Scalar(255,255,0), 2);
+    line(image, right_sp2, right_sp3, Scalar(255,255,0), 2);
+    line(image, right_sp3, right_sp4, Scalar(255,255,0), 2);
+    line(image, right_sp4, right_sp5, Scalar(255,255,0), 2);
+    line(image, right_sp5, right_sp6, Scalar(255,255,0), 2);
     if(p6.y != 0)
     {
-        line(image, right_sp6, right_sp7, cv::Scalar(255,255,0), 2);
+        line(image, right_sp6, right_sp7, Scalar(255,255,0), 2);
     }
     if(p6.y != 0 && p6.y >= 80)
     {
-         line(image, right_sp7, left_sp7, cv::Scalar(255,255,0), 2);
+         line(image, right_sp7, left_sp7, Scalar(255,255,0), 2);
     }
 }

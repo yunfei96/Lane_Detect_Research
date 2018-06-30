@@ -7,20 +7,21 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/imgproc.hpp"
-//#include "opencv2/plot.hpp"
 #include "preprocess.hpp"
-#include "NextFrameFilters.hpp"
-#include<cmath>
+#include <cmath>
 
-//if the program is in video mode, define VIDEO_MODE
+//if the input is a video and there is no need to output any video, set video mode to 1
 #define VIDEO_MODE 1
-//if it is debug mode it shows the images. define DEBUG_MODE
-#define DEBUG_MODE 1
+//if you want to output any video, set record rst to 1
+#define RECORD_RST 0
 
 using namespace std;
 using namespace cv;
+
+//extract white point in the image
 vector<vector<double>> find_white_point(Mat result, bool isFirst);
+//draw lane and spread function
 void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y);
 bool new_filter_valid_check(Mat _new,Mat _old);
-
+bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst);
 #endif

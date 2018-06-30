@@ -27,17 +27,11 @@ public:
     //to HSV, make it easier to set up threshold
     void toHSV();
     
-    //Gaussian filter to reduce noise casued by light spot
-    void filter();
-    
     //change the image into Bird-eye view
     Mat IPM(Mat input);
     
     //use threshold to change into binary image
     void toBinary(bool isfirst);
-    
-    //change the threshold based on output
-    void refine();
     
     //return preprocessed result
     Mat prep_result();

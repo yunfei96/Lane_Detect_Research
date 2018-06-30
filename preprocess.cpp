@@ -2,15 +2,18 @@
 
 const int CONTOURS_POINT_COUNT_THRESHOLD=100;
 
-void findDrawContours(Mat&src,Mat&dst){
+void findDrawContours(Mat&src,Mat&dst)
+{
     src.copyTo(dst);
     dst.setTo(0);
     vector<vector<Point> > contours;
     Mat cannyed;
     Canny(src,cannyed,170,255);
     findContours(cannyed, contours, RETR_LIST, CHAIN_APPROX_NONE);
-    for(int i=0;i<contours.size();i++){
-        if(contours[i].size()<CONTOURS_POINT_COUNT_THRESHOLD){
+    for(int i=0;i<contours.size();i++)
+    {
+        if(contours[i].size()<CONTOURS_POINT_COUNT_THRESHOLD)
+        {
             continue;
         }
         drawContours(dst,contours,i,255,10);
@@ -19,26 +22,31 @@ void findDrawContours(Mat&src,Mat&dst){
     
 }
 
-void drawFit(vector<vector<Point>> contours,Mat&dst){
-    for(int i=0;i<contours.size();i++){
-        if(contours[i].size()<CONTOURS_POINT_COUNT_THRESHOLD){
+void drawFit(vector<vector<Point>> contours,Mat&dst)
+{
+    for(int i=0;i<contours.size();i++)
+    {
+        if(contours[i].size()<CONTOURS_POINT_COUNT_THRESHOLD)
+        {
             continue;
         }
         Vec4f rst;
         fitLine(contours[i], rst, CV_DIST_L2, 0, 0.01,0.01);
-        //y=(dy/dx)*x+c;
-        //rst[3]=(rst[1]/rst[0])*rst[2]+c;
         int c=rst[3]-(rst[1]/rst[0])*rst[2];
-        //x=(y-c)/(rst[1]/rst[0])
         int y1=dst.rows;
         int y2=0;
         
-        if(contours[i][0].y<dst.rows/3){
+        if(contours[i][0].y<dst.rows/3)
+        {
             y1=dst.rows/3;
-        }else if(contours[i][0].y<dst.rows/3*2){
+        }
+        else if(contours[i][0].y<dst.rows/3*2)
+        {
             y1=dst.rows/3*2;
             y2=dst.rows/3;
-        }else{
+        }
+        else
+        {
             y2=dst.rows/3*2;
         }
         
@@ -63,17 +71,6 @@ void confirmation_filter_producer(Mat src,Mat&dst){
     findDrawContours(hsvSpl[1],s);
     findDrawContours(hsvSpl[2],v);
     dst=contoursImg2|s|v;
-    //imshow("contImg2",contoursImg2);
-    
-   /* line(contoursImg2,Point(0,contoursImg2.rows/3),Point(contoursImg2.cols,contoursImg2.rows/3),0,2);
-    line(contoursImg2,Point(0,contoursImg2.rows/3*2),Point(contoursImg2.cols,contoursImg2.rows/3*2),0,2);
-    vector<vector<Point>>  contours2;
-    findContours(contoursImg2, contours2, RETR_LIST, CHAIN_APPROX_NONE);
-    drawFit(contours2,newFilter);
-    
-    inRange(newFilter,Scalar(250),Scalar(255),newFilter);
-    dst=newFilter;*/
-    
 }
 
 //constructor
@@ -89,11 +86,10 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
     this->HighV = HighV;
     //resize the image
     resize(input, input, Size(1280,720));
-    image = input(Rect(0, input.rows / 2, input.cols, input.rows / 2 - 50));
-    //image = image(Rect(0, image.rows / 5, image.cols, image.rows / 5 * 4 ));
+    //image = input(Rect(0, input.rows / 2, input.cols, input.rows / 2 - 50));
+    image = input(Rect(0, input.rows / 4, input.cols, input.rows/4*3));
+    image = image(Rect(0, image.rows / 4, input.cols, image.rows/4*3));
     image.copyTo(origin_image);
-    //
-    filter();
     //
     toHSV();
     //
@@ -102,16 +98,6 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
     image = IPM(image);
     //
     origin_image = IPM(origin_image);
-    //
-    refine();
-    //-----------show image----------
-    
-#ifdef DEBUG_MODE
-    //namedWindow("prep output");
-    //imshow("prep output", image);
-    //waitKey(0);
-#endif
-    
 }
 
 //to HSV, make it easier to set up threshold
@@ -127,15 +113,6 @@ void preprocess::toHSV()
     image = imgHSV;
 }
 
-//Gaussian filter to reduce noise casued by light spot
-void preprocess::filter()
-{
-    Mat bluredImg;
-    //GaussianBlur(image, bluredImg, Size( 2, 2 ), 0, 0 );
-    blur(image, bluredImg, Size( 5, 5 ));
-    image=bluredImg;
-}
-
 //change the image into Bird-eye view
 Mat preprocess::IPM(Mat input)
 {
@@ -148,7 +125,7 @@ Mat preprocess::IPM(Mat input)
     //Input and Output Image;
     Mat output;
     int coValue=0;
-    int value = 230*2;
+    int value = 290*2;
     if(value<0){
         coValue=-value;
     }
@@ -191,14 +168,8 @@ void preprocess::toBinary(bool isfirst)
     Mat cfilter;
     confirmation_filter_producer(origin_image, cfilter);
     imshow("confirmation filter",cfilter);
-    
-    image=isfirst?imgThresholded&cfilter:cfilter;
-    //image=cfilter;
-}
-
-//change the threshold based on output
-void preprocess::refine()
-{
+    //image=isfirst?imgThresholded&cfilter:cfilter;
+    image=cfilter;
 }
 
 //return preprocessed result
