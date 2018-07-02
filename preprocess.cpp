@@ -1,7 +1,13 @@
 #include "preprocess.hpp"
 
 const int CONTOURS_POINT_COUNT_THRESHOLD=100;
-
+/*
+ Draw out the edge detection result, enlarge the area
+ @param src
+    address of the source image mat
+ @param dst
+    the address to write the result
+ */
 void findDrawContours(Mat&src,Mat&dst)
 {
     src.copyTo(dst);
@@ -21,7 +27,13 @@ void findDrawContours(Mat&src,Mat&dst)
     }
     
 }
-
+/*
+ To fit line over the contours that is passed in
+ @param contours
+    the contours found in 2D array form
+ @param dst
+    the address to write result
+ */
 void drawFit(vector<vector<Point>> contours,Mat&dst)
 {
     for(int i=0;i<contours.size();i++)
@@ -56,6 +68,13 @@ void drawFit(vector<vector<Point>> contours,Mat&dst)
     }
 }
 
+/*
+ To produce the second binary image for confirming the result
+ @param src
+    the address of source image
+ @param dst
+    the address to write the result
+ */
 
 void confirmation_filter_producer(Mat src,Mat&dst){
     
