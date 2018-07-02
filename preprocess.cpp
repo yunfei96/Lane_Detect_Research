@@ -158,7 +158,7 @@ void preprocess::toBinary(bool isfirst)
     
     //Threshold the image
     inRange(image, Scalar(LowH, LowS, LowV), Scalar(HighH, HighS, HighV), imgThresholded);
-    Mat element = getStructuringElement(MORPH_RECT, Size(1, 1));
+    Mat element = getStructuringElement(MORPH_RECT, Size(2, 2));
     
     //open morph
     morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);
