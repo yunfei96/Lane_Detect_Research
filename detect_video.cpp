@@ -9,7 +9,12 @@
 VideoWriter output;
 const string NAME="Output.avi";
 const int min_first_frame_point_thresh = 3;
-
+/*
+ the main function of the program
+ @param argc
+ @param argv
+    see argument rule below
+ */
 int main(int argc, char* argv[])
 {
     VideoCapture cap;
@@ -105,7 +110,20 @@ int main(int argc, char* argv[])
     
     return 0;
 }
-
+/*
+ lane recognition and output result
+ @param src
+    the source image in Mat
+ @param filter_frame_L
+    "next frame filter" of the left lane, which marks the possible region where lane
+    mark could occur
+ @param filter_frame_R
+    "next frame filter" of the right lane
+ @param isFirst
+    indicate if it is in process of finding the lane marks in the first frame passed in
+ @return
+    if the process is successful
+ */
 bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
 {
     preprocess step1;

@@ -1,5 +1,12 @@
 #include "detect.hpp"
-
+/*
+ This function check if the new "next frame filter" is valid. To be valid,
+ new and old have to share a sufficient common area
+ @param _new
+    the new filter
+ @param _old
+    the old filter
+ */
 bool new_filter_valid_check(Mat _new,Mat _old){
     Mat mask=_new&_old;
     vector<vector<Point>> contours;
