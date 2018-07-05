@@ -104,13 +104,16 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
     this->LowV = LowV;
     this->HighV = HighV;
     //resize the image
-    resize(input, input, Size(1280,720));
+    //resize(input, input, Size(1280,720));
     //image = input(Rect(0, input.rows / 2, input.cols, input.rows / 2 - 50));
     image = input(Rect(0, input.rows / 4, input.cols, input.rows/4*3));
     image = image(Rect(0, image.rows / 4, input.cols, image.rows/4*3));
     image.copyTo(origin_image);
     //
-    toHSV();
+    if(isFirst)
+    {
+        toHSV();
+    }
     //
     toBinary(isFirst);
     //
@@ -174,16 +177,18 @@ Mat preprocess::IPM(Mat input)
 void preprocess::toBinary(bool isfirst)
 {
     Mat imgThresholded;
-    
-    //Threshold the image
-    inRange(image, Scalar(LowH, LowS, LowV), Scalar(HighH, HighS, HighV), imgThresholded);
-    Mat element = getStructuringElement(MORPH_RECT, Size(2, 2));
-    
-    //open morph
-    morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);
-    
-    //close morph
-    morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
+    if(isfirst)
+    {
+        //Threshold the image
+        inRange(image, Scalar(LowH, LowS, LowV), Scalar(HighH, HighS, HighV), imgThresholded);
+        Mat element = getStructuringElement(MORPH_RECT, Size(2, 2));
+        
+        //open morph
+        morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);
+        
+        //close morph
+        morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
+    }
     Mat cfilter;
     confirmation_filter_producer(origin_image, cfilter);
     imshow("confirmation filter",cfilter);

@@ -18,6 +18,7 @@ const int min_first_frame_point_thresh = 3;
 int main(int argc, char* argv[])
 {
     VideoCapture cap;
+    setUseOptimized(true);
     /**
      * argument rules:
      *  if there is no aregument, open device zero as default.
@@ -85,8 +86,8 @@ int main(int argc, char* argv[])
         else // following frames
         {
             bool success=img_proc(frame,filter_frame_L,filter_frame_R,false);
-            imshow("filter frame l", filter_frame_L); // identified left reigon
-            imshow("filter frame r", filter_frame_R); // identified right reigon
+            //imshow("filter frame l", filter_frame_L); // identified left reigon
+            //imshow("filter frame r", filter_frame_R); // identified right reigon
             if(!success) // Lane is not detected
             {
                 follow_up_fail_count++;
@@ -136,11 +137,20 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
         step1.process(isFirst, src,isFirst); // only use edge filter
     }
     Mat result = step1.prep_result();
-    vector<vector<double>> white_points = find_white_point(result, true);
-    vector<double> left_x = white_points[0];
-    vector<double> left_y = white_points[1];
-    vector<double> right_x = white_points[2];
-    vector<double> right_y = white_points[3];
+    vector<vector<double>> white_points;
+    vector<double> left_x ;
+    vector<double> left_y ;
+    vector<double> right_x ;
+    vector<double> right_y ;
+    if(isFirst)
+    {
+        
+        white_points = find_white_point(result, true);
+        left_x = white_points[0];
+        left_y = white_points[1];
+        right_x = white_points[2];
+        right_y = white_points[3];
+    }
     if(!isFirst)
     {
         Mat rstl=result&filter_frame_L;

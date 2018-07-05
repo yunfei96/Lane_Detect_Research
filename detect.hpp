@@ -10,10 +10,10 @@
 #include "preprocess.hpp"
 #include <cmath>
 
-//if the input is a video and there is no need to output any video, set video mode to 1
-#define VIDEO_MODE 1
-//if you want to output any video, set record rst to 1
-#define RECORD_RST 0
+//if the input is a video and there is no need to output any video, set video mode 
+#define VIDEO_MODE
+//if you want to output any video, set record rst
+//#define RECORD_RST
 
 using namespace std;
 using namespace cv;
