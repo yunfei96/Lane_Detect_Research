@@ -151,7 +151,7 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
         right_x = white_points[2];
         right_y = white_points[3];
     }
-    if(!isFirst)
+    else
     {
         Mat rstl=result&filter_frame_L;
         Mat rstr=result&filter_frame_R;
@@ -187,16 +187,9 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     }
     else
     {
-        if(new_filter_valid_check(fl, filter_frame_L))
+        if(new_filter_valid_check(fl, filter_frame_L) && new_filter_valid_check(fr, filter_frame_R))
         {
             filter_frame_L=fl;
-        }
-        else
-        {
-            return false;
-        }
-        if(new_filter_valid_check(fr, filter_frame_R))
-        {
             filter_frame_R=fr;
         }
         else
