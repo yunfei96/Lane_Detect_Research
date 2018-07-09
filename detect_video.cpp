@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     Mat frame;
     cap>>frame;
 #ifdef RECORD_RST
-    Size S = Size(1280,288);
+    Size S = Size(1280,480);
     output.open(NAME, -1, 25, S, true);
 #endif
     int emptyFrameCount=0;
@@ -201,7 +201,7 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     
 #ifdef RECORD_RST
     Mat out;
-    resize(step1.origin_image, out, Size(1280,288));
+    resize(step1.origin_image, out, Size(1280,480));
     output<<out;
 #endif
     return true;
