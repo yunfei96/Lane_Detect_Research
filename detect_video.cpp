@@ -7,7 +7,7 @@
 #include "detect.hpp"
 #ifdef VIDEO_MODE
 VideoWriter output;
-const string NAME="Output.avi";
+const string NAME="/Users/YunfeiGuo/Desktop/output.mp4";
 const int min_first_frame_point_thresh = 3;
 /*
  the main function of the program
@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 {
     VideoCapture cap;
     setUseOptimized(true);
-    /**
+    /*
      * argument rules:
      *  if there is no aregument, open device zero as default.
      *  if there is one arguement, assume it is a single digit

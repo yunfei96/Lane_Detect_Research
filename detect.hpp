@@ -13,7 +13,7 @@
 //if the input is a video and there is no need to output any video, set video mode 
 #define VIDEO_MODE
 //if you want to output any video, set record rst
-//#define RECORD_RST
+#define RECORD_RST
 
 using namespace std;
 using namespace cv;

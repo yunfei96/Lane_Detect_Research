@@ -21,8 +21,20 @@ bool new_filter_valid_check(Mat _new,Mat _old){
     return contours.size()>=1;
 }
 
-//in first frame, cut the whole image vertically into 2 parts
-//else use the whole image
+
+/*
+ @param: result
+    it is the result of the filter
+ @param: isFirst
+    if this frame is first frame
+ @return:
+    a list of (x,y) coordinate of white point(the lane is white in binary image)
+ */
+
+/*
+ in first frame, cut the whole image vertically into 2 parts
+else use the whole image
+ */
 vector<vector<double>> find_white_point(Mat result, bool isFirst)
 {
     //get white point
@@ -113,8 +125,18 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
     return_vector.push_back(y_right);
     return return_vector;
 }
+/*
+ @param: image
+ the original image
+ @param: x
+ x value of white points in xy coordinate
+ @param: y
+ y value of white points in xy coordinate
+*/
 
 //draw area of interest. Make the area an enclosed area
+//The idea is find 8 critical points and directly connect a line between these points.
+
 void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y)
 {
     //find 8 points and link these points together
