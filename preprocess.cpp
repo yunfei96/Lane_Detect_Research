@@ -14,7 +14,7 @@ void findDrawContours(Mat&src,Mat&dst)
     dst.setTo(0);
     vector<vector<Point> > contours;
     Mat cannyed;
-    Canny(src,cannyed,170,255);
+    Canny(src,cannyed,240,255);
     findContours(cannyed, contours, RETR_LIST, CHAIN_APPROX_NONE);
     for(int i=0;i<contours.size();i++)
     {
@@ -104,16 +104,19 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
     this->LowV = LowV;
     this->HighV = HighV;
     //resize the image
-    //resize(input, input, Size(1280,720));
-    //image = input(Rect(0, input.rows / 2, input.cols, input.rows / 2 - 50));
-    image = input(Rect(0, input.rows / 4, input.cols, input.rows/4*3));
-    image = image(Rect(0, image.rows / 4, input.cols, image.rows/4*3));
+    image = input(Rect(0, input.rows / 2, input.cols, input.rows/2));
+    //image = image(Rect(0, image.rows / 4, input.cols, image.rows/4*2));
+    //
+    int MAX_KERNEL_LENGTH = 4;
+    for ( int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2 )
+    {
+        GaussianBlur( image, image, Size( i, i ), 0, 0 );
+    }
+    //
     image.copyTo(origin_image);
     //
-    if(isFirst)
-    {
-        toHSV();
-    }
+    toHSV();
+    
     //
     toBinary(isFirst);
     //
@@ -147,8 +150,9 @@ Mat preprocess::IPM(Mat input)
     //Input and Output Image;
     Mat output;
     int coValue=0;
-    int value = 290*2;
-    if(value<0){
+    int value = 270*2;
+    if(value<0)
+    {
         coValue=-value;
     }
     // Set the lambda matrix the same type and size as input
@@ -177,23 +181,23 @@ Mat preprocess::IPM(Mat input)
 void preprocess::toBinary(bool isfirst)
 {
     Mat imgThresholded;
-    if(isfirst)
-    {
-        //Threshold the image
-        inRange(image, Scalar(LowH, LowS, LowV), Scalar(HighH, HighS, HighV), imgThresholded);
-        Mat element = getStructuringElement(MORPH_RECT, Size(2, 2));
+    //Threshold the image
+    inRange(image, Scalar(LowH, LowS, LowV), Scalar(HighH, HighS, HighV), imgThresholded);
+    Mat element = getStructuringElement(MORPH_RECT, Size(2, 2));
+    //open morph
+    morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);
         
-        //open morph
-        morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);
-        
-        //close morph
-        morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
-    }
+    //close morph
+    morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
     Mat cfilter;
+    
     confirmation_filter_producer(origin_image, cfilter);
-    imshow("confirmation filter",cfilter);
+    //imshow("confirmation filter",cfilter);
     //image=isfirst?imgThresholded&cfilter:cfilter;
-    image=cfilter;
+    
+    image = cfilter&imgThresholded;
+    
+    imshow("confirmation filter",image);
 }
 
 //return preprocessed result
