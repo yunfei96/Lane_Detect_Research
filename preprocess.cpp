@@ -125,12 +125,16 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
     //
     image.copyTo(origin_image);
     //
+#ifdef ROBOT_TEST_MODE
     toHSV();
-    //
+#endif
+    //edge or color filter to produce binary image
     toBinary(isFirst);
-    //
+    
+    //to calculate result, transform binary image to IPM
     image = IPM(image);
-    //
+    
+    //to display result, need to transform non-binary image to IPM
     origin_image = IPM(origin_image);
 }
 
@@ -142,7 +146,6 @@ void preprocess::toHSV()
     //Convert the captured frame from BGR to HSV
     cvtColor(image, imgHSV, COLOR_BGR2HSV);
     split(imgHSV, hsvSplit);
-    //equalizeHist(hsvSplit[2],hsvSplit[2]);
     merge(hsvSplit,imgHSV);
     image = imgHSV;
 }
@@ -196,6 +199,7 @@ Mat preprocess::IPM(Mat input)
 //use threshold to change into binary image
 void preprocess::toBinary(bool isfirst)
 {
+#ifdef ROBOT_TEST_MODE
     Mat imgThresholded;
     //Threshold the image
     inRange(image, Scalar(LowH, LowS, LowV), Scalar(HighH, HighS, HighV), imgThresholded);
@@ -205,13 +209,14 @@ void preprocess::toBinary(bool isfirst)
         
     //close morph
     morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
+#endif
     Mat cfilter;
     confirmation_filter_producer(origin_image, cfilter);
-#ifdef REAL_ROAD_MODE
-    image = cfilter;
-#endif
 #ifdef ROBOT_TEST_MODE
     image = cfilter&imgThresholded;
+#endif
+#ifdef REAL_ROAD_MODE
+    image = cfilter;
 #endif
     imshow("confirmation filter",image);
 }
