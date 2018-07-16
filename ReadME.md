@@ -9,5 +9,6 @@ techincal report: in progress
 The test videos are on: https://youtu.be/2CIxM7x-Clc
 The result videos are on: https://youtu.be/IQAtYWv1a-Q
 
+more test videos under my youtube channel
 
 
