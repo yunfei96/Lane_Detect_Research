@@ -14,7 +14,13 @@ void findDrawContours(Mat&src,Mat&dst)
     dst.setTo(0);
     vector<vector<Point> > contours;
     Mat cannyed;
+#ifdef REAL_ROAD_MODE
+    Canny(src,cannyed,150,255);
+#endif
+#ifdef ROBOT_TEST_MODE
     Canny(src,cannyed,240,255);
+#endif
+    
     findContours(cannyed, contours, RETR_LIST, CHAIN_APPROX_NONE);
     for(int i=0;i<contours.size();i++)
     {
@@ -104,9 +110,13 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
     this->LowV = LowV;
     this->HighV = HighV;
     //resize the image
+#ifdef REAL_ROAD_MODE
+    image = input(Rect(0, input.rows / 4, input.cols, input.rows/4*3));
+    image = image(Rect(0, image.rows / 4, input.cols, image.rows/4*3));
+#endif
+#ifdef ROBOT_TEST_MODE
     image = input(Rect(0, input.rows / 2, input.cols, input.rows/2));
-    //image = image(Rect(0, image.rows / 4, input.cols, image.rows/4*2));
-    //
+#endif
     int MAX_KERNEL_LENGTH = 4;
     for ( int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2 )
     {
@@ -116,7 +126,6 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
     image.copyTo(origin_image);
     //
     toHSV();
-    
     //
     toBinary(isFirst);
     //
@@ -150,7 +159,14 @@ Mat preprocess::IPM(Mat input)
     //Input and Output Image;
     Mat output;
     int coValue=0;
-    int value = 270*2;
+    int value =0;
+#ifdef REAL_ROAD_MODE
+    value = 290*2;
+#endif
+#ifdef ROBOT_TEST_MODE
+    value = 270*2;
+#endif
+    
     if(value<0)
     {
         coValue=-value;
@@ -190,13 +206,13 @@ void preprocess::toBinary(bool isfirst)
     //close morph
     morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
     Mat cfilter;
-    
     confirmation_filter_producer(origin_image, cfilter);
-    //imshow("confirmation filter",cfilter);
-    //image=isfirst?imgThresholded&cfilter:cfilter;
-    
+#ifdef REAL_ROAD_MODE
+    image = cfilter;
+#endif
+#ifdef ROBOT_TEST_MODE
     image = cfilter&imgThresholded;
-    
+#endif
     imshow("confirmation filter",image);
 }
 

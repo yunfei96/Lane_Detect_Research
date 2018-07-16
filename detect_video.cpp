@@ -5,9 +5,7 @@
 //  Modified by Yunfei Guo on 6/30/18
 
 #include "detect.hpp"
-#ifdef VIDEO_MODE
 VideoWriter output;
-const string NAME="/Users/YunfeiGuo/Desktop/output.mp4";
 const int min_first_frame_point_thresh = 3;
 /*
  the main function of the program
@@ -206,4 +204,3 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
 #endif
     return true;
 }
-#endif

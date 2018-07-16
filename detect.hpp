@@ -10,14 +10,18 @@
 #include "preprocess.hpp"
 #include <cmath>
 
-//if the input is a video and there is no need to output any video, set video mode 
-#define VIDEO_MODE
+//This need to be enabled when real road data is used, because real road lane might be white/yellow, color filter is not enabled
+#define REAL_ROAD_MODE
+//This need to be enabled when test using robot
+//#define ROBOT_TEST_MODE
 //if you want to output any video, set record rst
-#define RECORD_RST
+//#define RECORD_RST
 
 using namespace std;
 using namespace cv;
 
+//name of output file
+const string NAME="/Users/YunfeiGuo/Desktop/output.mp4";
 //extract white point in the image
 vector<vector<double>> find_white_point(Mat result, bool isFirst);
 //draw lane and spread function
