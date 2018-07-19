@@ -18,7 +18,7 @@ void findDrawContours(Mat&src,Mat&dst)
     Canny(src,cannyed,150,255);
 #endif
 #ifdef ROBOT_TEST_MODE
-    Canny(src,cannyed,240,255);
+    Canny(src,cannyed,200,255);
 #endif
     
     findContours(cannyed, contours, RETR_LIST, CHAIN_APPROX_NONE);

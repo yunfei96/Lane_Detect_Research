@@ -7,6 +7,8 @@
 #include "detect.hpp"
 VideoWriter output;
 const int min_first_frame_point_thresh = 3;
+queue<Mat> old_frame_right;
+queue<Mat> old_frame_left;
 /*
  the main function of the program
  @param argc
@@ -126,6 +128,7 @@ int main(int argc, char* argv[])
 bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
 {
     preprocess step1;
+    
     if(isFirst) //if is first frame
     {
         step1.process(isFirst,src, 0,255,0,15,235,255); // use both color and edge filter
@@ -182,13 +185,49 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     {
         filter_frame_L=fl;
         filter_frame_R=fr;
+        old_frame_left.push(fl);
+        old_frame_right.push(fr);
     }
     else
     {
         if(new_filter_valid_check(fl, filter_frame_L) && new_filter_valid_check(fr, filter_frame_R))
         {
-            filter_frame_L=fl;
-            filter_frame_R=fr;
+            filter_frame_L = fl;
+            filter_frame_R = fr;
+            imshow("old filter", filter_frame_R);
+            if(old_frame_left.size() < 6 && old_frame_right.size() < 6)
+            {
+                old_frame_left.push(fl.clone());
+                old_frame_right.push(fr.clone());
+                queue<Mat> temp_frame_left(old_frame_left);
+                queue<Mat> temp_frame_right(old_frame_right);
+                while (!temp_frame_left.empty() && !temp_frame_right.empty())
+                {
+                    filter_frame_L=filter_frame_L|temp_frame_left.front();
+                    filter_frame_R=filter_frame_R|temp_frame_right.front();
+                    temp_frame_left.pop();
+                    temp_frame_right.pop();
+                }
+                
+            }
+            else
+            {
+                old_frame_left.push(fl.clone());
+                old_frame_right.push(fr.clone());
+                old_frame_right.pop();
+                old_frame_left.pop();
+                queue<Mat> temp_frame_left(old_frame_left);
+                queue<Mat> temp_frame_right(old_frame_right);
+                while (!temp_frame_left.empty() && !temp_frame_right.empty())
+                {
+                    filter_frame_L = filter_frame_L|temp_frame_left.front();
+                    filter_frame_R = filter_frame_R|temp_frame_right.front();
+                    temp_frame_left.pop();
+                    temp_frame_right.pop();
+                }
+            }
+            imshow("new filter", filter_frame_R);
+            
         }
         else
         {
