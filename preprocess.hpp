@@ -3,7 +3,7 @@
 #include "detect.hpp"
 using namespace cv;
 using namespace std;
-//This class is used to do pre-process to the image to get enough point to perform machine learning
+//This class is used to do pre-process
 class preprocess
 {
 private:

@@ -11,10 +11,8 @@ find_package( OpenCV REQUIRED )
 #set Src 
 #-----------------------add new files in the src in future implementation----------------
 set(src
-  #step one
   preprocess.cpp
   preprocess.hpp
-  #others
   function.cpp
 )
 #------------------------should not modify below---------------------------------------
