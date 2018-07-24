@@ -14,7 +14,7 @@ void findDrawContours(Mat&src,Mat&dst)
     dst.setTo(0);
     vector<vector<Point> > contours;
     Mat cannyed;
-    Canny(src,cannyed,150,255);    
+    Canny(src,cannyed,150,255);
     findContours(cannyed, contours, RETR_LIST, CHAIN_APPROX_NONE);
     for(int i=0;i<contours.size();i++)
     {
@@ -122,6 +122,12 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
 #ifdef ROBOT_TEST_MODE
     toHSV();
 #endif
+#ifdef REAL_ROAD_MODE
+    if(isFirst)
+    {
+        toHSV();
+    }
+#endif
     //edge or color filter to produce binary image
     toBinary(isFirst);
     
@@ -204,13 +210,46 @@ void preprocess::toBinary(bool isfirst)
     //close morph
     morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
 #endif
+#ifdef REAL_ROAD_MODE
+    Mat imgThresholdedw;
+    Mat imgThresholdedy;
+    if(isfirst)
+    {
+        //-------------filter white color
+        //Threshold the image
+        inRange(image, Scalar(0, 0, 180), Scalar(255, 30, 255), imgThresholdedw);
+        Mat elementw = getStructuringElement(MORPH_RECT, Size(2, 2));
+        //open morph
+        morphologyEx(imgThresholdedw, imgThresholdedw, MORPH_OPEN, elementw);
+        
+        //close morph
+        morphologyEx(imgThresholdedw, imgThresholdedw, MORPH_CLOSE, elementw);
+        //------------filter yellow color
+        //Threshold the image
+        inRange(image, Scalar(0, 50, 150), Scalar(110, 150, 255), imgThresholdedy);
+        Mat elementy = getStructuringElement(MORPH_RECT, Size(2, 2));
+        //open morph
+        morphologyEx(imgThresholdedy, imgThresholdedy, MORPH_OPEN, elementy);
+        
+        //close morph
+        morphologyEx(imgThresholdedy, imgThresholdedy, MORPH_CLOSE, elementy);
+    }
+#endif
     Mat cfilter;
     confirmation_filter_producer(origin_image, cfilter);
+#ifdef REAL_ROAD_MODE
+    if(isfirst)
+    {
+        image = cfilter&(imgThresholdedy|imgThresholdedw);
+    }
+    else
+    {
+        image = cfilter;
+    }
+#endif
+    
 #ifdef ROBOT_TEST_MODE
     image = cfilter&imgThresholded;
-#endif
-#ifdef REAL_ROAD_MODE
-    image = cfilter;
 #endif
     imshow("confirmation filter",image);
 }
