@@ -14,13 +14,7 @@ void findDrawContours(Mat&src,Mat&dst)
     dst.setTo(0);
     vector<vector<Point> > contours;
     Mat cannyed;
-#ifdef REAL_ROAD_MODE
-    Canny(src,cannyed,150,255);
-#endif
-#ifdef ROBOT_TEST_MODE
-    Canny(src,cannyed,200,255);
-#endif
-    
+    Canny(src,cannyed,150,255);    
     findContours(cannyed, contours, RETR_LIST, CHAIN_APPROX_NONE);
     for(int i=0;i<contours.size();i++)
     {
