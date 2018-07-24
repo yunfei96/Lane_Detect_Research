@@ -5,7 +5,7 @@ No machine learning is used.
 
 Non-techincal Filter design and program design are included in "Documentation of Lane Detect Algo"
 
-Techincal report: contact me for detail
+Techincal report: "Lane Detection"
 
 Real Road:
 Input: https://youtu.be/2CIxM7x-Clc

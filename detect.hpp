@@ -22,9 +22,23 @@ using namespace cv;
 
 //name of output file
 const string NAME="/Users/YunfeiGuo/Desktop/output.mp4";
-//extract white point in the image
+/*
+ @param: result
+ it is the result of the filter
+ @param: isFirst
+ if this frame is first frame
+ @return:
+ a list of (x,y) coordinate of white point(the lane is white in binary image)
+ */
 vector<vector<double>> find_white_point(Mat result, bool isFirst);
-//draw lane and spread function
+/*
+ @param: image
+ the original image
+ @param: x
+ x value of white points in xy coordinate
+ @param: y
+ y value of white points in xy coordinate
+ */
 void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y);
 /*
 This function check if the new "next frame filter" is valid. To be valid,
