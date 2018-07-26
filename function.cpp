@@ -142,13 +142,15 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     //find 8 points and link these points together
     Point p0(x[x.size()-1], y[y.size()-1]);
     Point p1(x[x.size()-x.size()*1/64-1], y[y.size()-x.size()*1/64-1]);
-    Point p2(x[x.size()-x.size()*1/16-1], y[y.size()-x.size()*1/16-1]);
-    Point p3(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
-    Point p4(x[x.size()-x.size()*4/16-1], y[y.size()-x.size()*4/16-1]);
-    Point p5(x[x.size()-x.size()*8/16-1], y[y.size()-x.size()*8/16-1]);
-    Point p6(x[x.size()-x.size()*14/16-1], y[y.size() -x.size()*14/16-1]);
-    Point p7(x[0],y[0]);
-    Point p8(0,0);
+    Point p2(x[x.size()-x.size()*1/32-1], y[y.size()-x.size()*1/32-1]);
+    Point p3(x[x.size()-x.size()*1/16-1], y[y.size()-x.size()*1/16-1]);
+    Point p4(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
+    Point p5(x[x.size()-x.size()*5/16-1], y[y.size()-x.size()*5/16-1]);
+    Point p6(x[x.size()-x.size()*7/16-1], y[y.size()-x.size()*7/16-1]);
+    Point p7(x[x.size()-x.size()*9/16-1], y[y.size()-x.size()*9/16-1]);
+    Point p8(x[x.size()-x.size()*13/16-1], y[y.size() -x.size()*13/16-1]);
+    Point p9(x[0],y[0]);
+    Point p10(0,0);
     //extend to bottom of the image
     if(p0.y < image.rows-20)
     {
@@ -170,42 +172,42 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     }
     //extend to top of the image
     //if highest point is not reach top
-    if(p7.y != 0)
+    if(p9.y != 0)
     {
         //if highest point is high enough and direct link the to the top
-        if(p7.y < 80)
+        if(p9.y < 80)
         {
             //find dy/dx
-            double dy = p7.y-p5.y;
-            double dx = p7.x-p5.x;
+            double dy = p9.y-p8.y;
+            double dx = p9.x-p8.x;
             if(dx != 0)
             {
                 double k = dy/dx;
-                double b = p7.y -k*p7.x;
+                double b = p9.y -k*p9.x;
                 double x_predict = -b/k;
-                p8.x = x_predict;
+                p10.x = x_predict;
             }
             else
             {
-                p8.x = p7.x;
+                p10.x = p9.x;
             }
         }
         else
         {
-            p8.y = p7.y -80;
+            p10.y = p9.y -80;
             //find dy/dx
-            double dy = p7.y-p5.y;
-            double dx = p7.x-p5.x;
+            double dy = p9.y-p8.y;
+            double dx = p9.x-p8.x;
             if(dx != 0)
             {
                 double k = dy/dx;
-                double b = p7.y -k*p7.x;
-                double x_predict = (p8.y-b)/k;
-                p8.x = x_predict;
+                double b = p9.y -k*p9.x;
+                double x_predict = (p10.y-b)/k;
+                p10.x = x_predict;
             }
             else
             {
-                p8.x = p7.x;
+                p10.x = p9.x;
             }
         }
     }
@@ -219,6 +221,8 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     Point left_sp6(p6.x - 10,p6.y);
     Point left_sp7(p7.x - 10,p7.y);
     Point left_sp8(p8.x - 10,p8.y);
+    Point left_sp9(p9.x - 10,p9.y);
+    Point left_sp10(p10.x - 10,p10.y);
     //right line
     Point right_sp0(p0.x, p0.y);
     Point right_sp1(p1.x + 5, p1.y);
@@ -229,18 +233,8 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     Point right_sp6(p6.x + 10,p6.y);
     Point right_sp7(p7.x + 10,p7.y);
     Point right_sp8(p8.x + 10,p8.y);
-    //draw the line
-    /*
-    line(image, p0, p1, cv::Scalar(255,0,0), 2);
-    line(image, p1, p2, cv::Scalar(255,0,0), 2);
-    line(image, p2, p3, cv::Scalar(255,0,0), 2);
-    line(image, p3, p4, cv::Scalar(255,0,0), 2);
-    line(image, p4, p5, cv::Scalar(255,0,0), 2);
-    line(image, p5, p6, cv::Scalar(255,0,0), 2);
-    if(p6.y != 0)
-    {
-        line(image, p6, p7, cv::Scalar(255,0,0), 2);
-    }*/
+    Point right_sp9(p9.x + 10,p9.y);
+    Point right_sp10(p10.x + 10,p10.y);
     //draw left line
     line(image, left_sp0, left_sp1, Scalar(255,255,0), 2);
     line(image, left_sp1, left_sp2, Scalar(255,255,0), 2);
@@ -249,9 +243,12 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     line(image, left_sp4, left_sp5, Scalar(255,255,0), 2);
     line(image, left_sp5, left_sp6, Scalar(255,255,0), 2);
     line(image, left_sp6, left_sp7, Scalar(255,255,0), 2);
-    if(p7.y != 0)
+    line(image, left_sp7, left_sp8, Scalar(255,255,0), 2);
+    line(image, left_sp8, left_sp9, Scalar(255,255,0), 2);
+    
+    if(p9.y != 0)
     {
-        line(image, left_sp7, left_sp8, Scalar(255,255,0), 2);
+        line(image, left_sp9, left_sp10, Scalar(255,255,0), 2);
     }
     //draw right line
     line(image, right_sp0, right_sp1, Scalar(255,255,0), 2);
@@ -261,12 +258,14 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     line(image, right_sp4, right_sp5, Scalar(255,255,0), 2);
     line(image, right_sp5, right_sp6, Scalar(255,255,0), 2);
     line(image, right_sp6, right_sp7, Scalar(255,255,0), 2);
-    if(p7.y != 0)
+    line(image, right_sp7, right_sp8, Scalar(255,255,0), 2);
+    line(image, right_sp8, right_sp9, Scalar(255,255,0), 2);
+    if(p9.y != 0)
     {
-        line(image, right_sp7, right_sp8, Scalar(255,255,0), 2);
+        line(image, right_sp9, right_sp10, Scalar(255,255,0), 2);
     }
-    if(p7.y != 0 && p7.y >= 80)
+    if(p9.y != 0 && p9.y >= 80)
     {
-         line(image, right_sp8, left_sp8, Scalar(255,255,0), 2);
+         line(image, right_sp10, left_sp10, Scalar(255,255,0), 2);
     }
 }
