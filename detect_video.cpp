@@ -135,7 +135,7 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     }
     else
     {
-        step1.process(isFirst,src,0,255,0,50,200,255); // only use edge filter
+        step1.process(isFirst,src,0,255,0,15,235,255); // only use edge filter
     }
     Mat result = step1.prep_result();
     vector<vector<double>> white_points;
