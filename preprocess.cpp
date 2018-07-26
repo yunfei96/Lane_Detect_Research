@@ -239,7 +239,8 @@ void preprocess::toBinary(bool isfirst)
 #ifdef REAL_ROAD_MODE
     if(isfirst)
     {
-        image = (cfilter&imgThresholdedy)|(cfilter&imgThresholdedw);
+        //image = (cfilter&imgThresholdedy)|(cfilter&imgThresholdedw);
+        image = cfilter;
     }
     else
     {
