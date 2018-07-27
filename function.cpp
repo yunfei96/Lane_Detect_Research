@@ -155,8 +155,8 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     if(p0.y < image.rows-20)
     {
         //find dy/dx
-        double dy = p0.y-p2.y;
-        double dx = p0.x-p2.x;
+        double dy = p0.y-p1.y;
+        double dx = p0.x-p1.x;
         if(dx != 0)
         {
             double k = dy/dx;
