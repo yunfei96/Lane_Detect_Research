@@ -139,24 +139,24 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
 
 void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y)
 {
-    //find 8 points and link these points together
+    //find 10 points and link these points together
     Point p0(x[x.size()-1], y[y.size()-1]);
     Point p1(x[x.size()-x.size()*1/64-1], y[y.size()-x.size()*1/64-1]);
-    Point p2(x[x.size()-x.size()*1/32-1], y[y.size()-x.size()*1/32-1]);
-    Point p3(x[x.size()-x.size()*1/16-1], y[y.size()-x.size()*1/16-1]);
-    Point p4(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
-    Point p5(x[x.size()-x.size()*5/16-1], y[y.size()-x.size()*5/16-1]);
-    Point p6(x[x.size()-x.size()*7/16-1], y[y.size()-x.size()*7/16-1]);
-    Point p7(x[x.size()-x.size()*9/16-1], y[y.size()-x.size()*9/16-1]);
-    Point p8(x[x.size()-x.size()*13/16-1], y[y.size() -x.size()*13/16-1]);
+    Point p2(x[x.size()-x.size()*1/16-1], y[y.size()-x.size()*1/16-1]);
+    Point p3(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
+    Point p4(x[x.size()-x.size()*4/16-1], y[y.size()-x.size()*4/16-1]);
+    Point p5(x[x.size()-x.size()*8/16-1], y[y.size()-x.size()*8/16-1]);
+    Point p6(x[x.size()-x.size()*9/16-1], y[y.size()-x.size()*9/16-1]);
+    Point p7(x[x.size()-x.size()*10/16-1], y[y.size()-x.size()*10/16-1]);
+    Point p8(x[x.size()-x.size()*14/16-1], y[y.size() -x.size()*14/16-1]);
     Point p9(x[0],y[0]);
     Point p10(0,0);
     //extend to bottom of the image
     if(p0.y < image.rows-20)
     {
         //find dy/dx
-        double dy = p0.y-p1.y;
-        double dx = p0.x-p1.x;
+        double dy = p0.y-p2.y;
+        double dx = p0.x-p2.x;
         if(dx != 0)
         {
             double k = dy/dx;
@@ -178,8 +178,8 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
         if(p9.y < 80)
         {
             //find dy/dx
-            double dy = p9.y-p8.y;
-            double dx = p9.x-p8.x;
+            double dy = p9.y-p5.y;
+            double dx = p9.x-p5.x;
             if(dx != 0)
             {
                 double k = dy/dx;
@@ -196,8 +196,8 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
         {
             p10.y = p9.y -80;
             //find dy/dx
-            double dy = p9.y-p8.y;
-            double dx = p9.x-p8.x;
+            double dy = p9.y-p5.y;
+            double dx = p9.x-p5.x;
             if(dx != 0)
             {
                 double k = dy/dx;
@@ -245,7 +245,6 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     line(image, left_sp6, left_sp7, Scalar(255,255,0), 2);
     line(image, left_sp7, left_sp8, Scalar(255,255,0), 2);
     line(image, left_sp8, left_sp9, Scalar(255,255,0), 2);
-    
     if(p9.y != 0)
     {
         line(image, left_sp9, left_sp10, Scalar(255,255,0), 2);

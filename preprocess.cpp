@@ -147,6 +147,8 @@ void preprocess::toHSV()
     cvtColor(image, imgHSV, COLOR_BGR2HSV);
     split(imgHSV, hsvSplit);
     equalizeHist(hsvSplit[0], hsvSplit[0]);
+    equalizeHist(hsvSplit[1], hsvSplit[1]);
+    equalizeHist(hsvSplit[2], hsvSplit[2]);
     merge(hsvSplit,imgHSV);
     image = imgHSV;
 }
