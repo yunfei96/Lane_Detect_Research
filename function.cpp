@@ -135,7 +135,7 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
 */
 
 //draw area of interest. Make the area an enclosed area
-//The idea is find 8 critical points and directly connect a line between these points.
+//The idea is find 10 Critical Points and directly connect a line between these points.
 
 void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y)
 {
