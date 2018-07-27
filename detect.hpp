@@ -15,7 +15,7 @@
 //This need to be enabled when test using robot
 //#define ROBOT_TEST_MODE
 //if you want to output any video, set record rst
-#define RECORD_RST
+//#define RECORD_RST
 
 using namespace std;
 using namespace cv;

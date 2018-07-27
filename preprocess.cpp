@@ -95,7 +95,6 @@ void confirmation_filter_producer(Mat src,Mat&dst)
     merge(noshadowsplit, noshadow);
     Mat gray_img,contoursImg;
     cvtColor(noshadow,gray_img,CV_BGR2GRAY);
-    imshow("sh", gray_img);
     findDrawContours(gray_img,contoursImg);
     dst=contoursImg;
 }
@@ -245,15 +244,10 @@ void preprocess::toBinary(bool isfirst)
     else
     {
         image = cfilter|imgThresholdedy|imgThresholdedw;
-        imshow("e", cfilter);
-        imshow("yellow", imgThresholdedy);
-        imshow("white", imgThresholdedw);
     }
 #endif
     
 #ifdef ROBOT_TEST_MODE
-    imshow("color", imgThresholded);
-    imshow("edge", cfilter);
     if(isfirst)
     {
         image = cfilter&imgThresholded;

@@ -1,8 +1,7 @@
 //  source file name: detect_video.cpp function.cpp
 //  headers: detect.hpp
 //  build: detect
-//  Created by Jason Lu on 4/19/18.
-//  Modified by Yunfei Guo on 6/30/18
+//  Created by Jason Lu, Yunfei Guo on 4/19/18
 
 #include "detect.hpp"
 VideoWriter output;
@@ -194,7 +193,6 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
         {
             filter_frame_L = fl;
             filter_frame_R = fr;
-            imshow("old filter", filter_frame_R);
             if(old_frame_left.size() < 6 && old_frame_right.size() < 6)
             {
                 old_frame_left.push(fl.clone());
@@ -226,8 +224,6 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
                     temp_frame_right.pop();
                 }
             }
-            imshow("new filter", filter_frame_R);
-            
         }
         else
         {
