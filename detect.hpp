@@ -11,11 +11,11 @@
 #include <cmath>
 #include <queue>
 //This need to be enabled when real road data is used, because real road lane might be white/yellow, color filter is not enabled
-#define REAL_ROAD_MODE
+//#define REAL_ROAD_MODE
 //This need to be enabled when test using robot
-//#define ROBOT_TEST_MODE
+#define ROBOT_TEST_MODE
 //if you want to output any video, set record rst
-//#define RECORD_RST
+#define RECORD_RST
 
 using namespace std;
 using namespace cv;
@@ -39,7 +39,8 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst);
  @param: y
  y value of white points in xy coordinate
  */
-void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y);
+void draw_spread_function(Mat image, vector<double> x, vector<double> y);
+void draw_line(Mat image, vector<double> x, vector<double> y);
 /*
 This function check if the new "next frame filter" is valid. To be valid,
 new and old have to share a sufficient common area

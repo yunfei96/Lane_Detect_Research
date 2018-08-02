@@ -126,17 +126,17 @@ int main(int argc, char* argv[])
  */
 bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
 {
-    preprocess step1;
+    preprocess filter;
     
     if(isFirst) //if is first frame
     {
-        step1.process(isFirst,src, 0,255,0,15,235,255); // use both color and edge filter
+        filter.process(isFirst,src, 0,255,0,15,235,255); // use both color and edge filter
     }
     else
     {
-        step1.process(isFirst,src,0,255,0,15,235,255); // only use edge filter
+        filter.process(isFirst,src,0,255,0,15,235,255); // only use edge filter
     }
-    Mat result = step1.prep_result();
+    Mat result = filter.prep_result();
     vector<vector<double>> white_points;
     vector<double> left_x ;
     vector<double> left_y ;
@@ -168,16 +168,16 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     {
         return false;
     }
-    draw_line_and_spread_function(step1.origin_image, left_x, left_y);
-    draw_line_and_spread_function(step1.origin_image, right_x, right_y);
+    draw_line(filter.origin_image, left_x, left_y);
+    draw_line(filter.origin_image, right_x, right_y);
     //before passing the filter frames, initialize it.
-    Mat fl(Size(step1.origin_image.cols,step1.origin_image.rows),CV_8UC1,Scalar(0));
-    draw_line_and_spread_function(fl, left_x, left_y);
+    Mat fl(Size(filter.origin_image.cols,filter.origin_image.rows),CV_8UC1,Scalar(0));
+    draw_spread_function(fl, left_x, left_y);
     floodFill(fl,Point(left_x[0],left_y[0]),Scalar(255));
     inRange(fl,Scalar(250),Scalar(256),fl);
     
-    Mat fr(Size(step1.origin_image.cols,step1.origin_image.rows),CV_8UC1,Scalar(0));
-    draw_line_and_spread_function(fr, right_x, right_y);
+    Mat fr(Size(filter.origin_image.cols,filter.origin_image.rows),CV_8UC1,Scalar(0));
+    draw_spread_function(fr, right_x, right_y);
     floodFill(fr,Point(right_x[0],right_y[0]),Scalar(255));
     inRange(fr,Scalar(250),Scalar(256),fr);
     if(isFirst)
@@ -230,7 +230,7 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
             return false;
         }
     }
-    imshow("image",step1.origin_image);
+    imshow("image",filter.origin_image);
     
 #ifdef RECORD_RST
     Mat out;

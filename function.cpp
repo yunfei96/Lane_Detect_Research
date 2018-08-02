@@ -137,7 +137,7 @@ vector<vector<double>> find_white_point(Mat result, bool isFirst)
 //draw area of interest. Make the area an enclosed area
 //The idea is find 10 Critical Points and directly connect a line between these points.
 
-void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y)
+void draw_spread_function(Mat image, vector<double> x, vector<double> y)
 {
     //find 10 points and link these points together
     Point p0(x[x.size()-1], y[y.size()-1]);
@@ -267,4 +267,29 @@ void draw_line_and_spread_function(Mat image, vector<double> x, vector<double> y
     {
          line(image, right_sp10, left_sp10, Scalar(255,255,0), 2);
     }
+    
+}
+void draw_line(Mat image, vector<double> x, vector<double> y)
+{
+    //find 10 points and link these points together
+    Point p0(x[x.size()-1], y[y.size()-1]);
+    Point p1(x[x.size()-x.size()*1/64-1], y[y.size()-x.size()*1/64-1]);
+    Point p2(x[x.size()-x.size()*1/16-1], y[y.size()-x.size()*1/16-1]);
+    Point p3(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
+    Point p4(x[x.size()-x.size()*4/16-1], y[y.size()-x.size()*4/16-1]);
+    Point p5(x[x.size()-x.size()*8/16-1], y[y.size()-x.size()*8/16-1]);
+    Point p6(x[x.size()-x.size()*9/16-1], y[y.size()-x.size()*9/16-1]);
+    Point p7(x[x.size()-x.size()*10/16-1], y[y.size()-x.size()*10/16-1]);
+    Point p8(x[x.size()-x.size()*14/16-1], y[y.size() -x.size()*14/16-1]);
+    Point p9(x[0],y[0]);
+    
+    line(image, p0, p1, Scalar(255,255,0), 2);
+    line(image, p1, p2, Scalar(255,255,0), 2);
+    line(image, p2, p3, Scalar(255,255,0), 2);
+    line(image, p3, p4, Scalar(255,255,0), 2);
+    line(image, p4, p5, Scalar(255,255,0), 2);
+    line(image, p5, p6, Scalar(255,255,0), 2);
+    line(image, p6, p7, Scalar(255,255,0), 2);
+    line(image, p7, p8, Scalar(255,255,0), 2);
+    line(image, p8, p9, Scalar(255,255,0), 2);
 }
