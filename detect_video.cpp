@@ -234,7 +234,7 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     
 #ifdef RECORD_RST
     Mat out;
-    resize(step1.origin_image, out, Size(1280,480));
+    resize(filter.origin_image, out, Size(1280,480));
     output<<out;
 #endif
     return true;
