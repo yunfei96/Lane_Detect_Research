@@ -8,6 +8,32 @@ VideoWriter output;
 const int min_first_frame_point_thresh = 3;
 queue<Mat> old_frame_right;
 queue<Mat> old_frame_left;
+int frame_number=0;
+ofstream csvOut("pout.csv");
+
+void write_rst_to_csv(ofstream&fd,vector<double>x,vector<double>y,int frame_number){
+    fd<<frame_number<<endl;
+    Point p0(x[x.size()-1], y[y.size()-1]);
+    Point p1(x[x.size()-x.size()*1/64-1], y[y.size()-x.size()*1/64-1]);
+    Point p2(x[x.size()-x.size()*1/16-1], y[y.size()-x.size()*1/16-1]);
+    Point p3(x[x.size()-x.size()*3/16-1], y[y.size()-x.size()*3/16-1]);
+    Point p4(x[x.size()-x.size()*4/16-1], y[y.size()-x.size()*4/16-1]);
+    Point p5(x[x.size()-x.size()*8/16-1], y[y.size()-x.size()*8/16-1]);
+    Point p6(x[x.size()-x.size()*9/16-1], y[y.size()-x.size()*9/16-1]);
+    Point p7(x[x.size()-x.size()*10/16-1], y[y.size()-x.size()*10/16-1]);
+    Point p8(x[x.size()-x.size()*14/16-1], y[y.size() -x.size()*14/16-1]);
+    Point p9(x[0],y[0]);
+    fd<<p0.x<<", "<<p0.y<<endl;
+    fd<<p1.x<<", "<<p1.y<<endl;
+    fd<<p2.x<<", "<<p2.y<<endl;
+    fd<<p3.x<<", "<<p3.y<<endl;
+    fd<<p4.x<<", "<<p4.y<<endl;
+    fd<<p5.x<<", "<<p5.y<<endl;
+    fd<<p6.x<<", "<<p6.y<<endl;
+    fd<<p7.x<<", "<<p7.y<<endl;
+    fd<<p8.x<<", "<<p8.y<<endl;
+    fd<<p9.x<<", "<<p9.y<<endl;
+}
 /*
  the main function of the program
  @param argc
@@ -65,6 +91,7 @@ int main(int argc, char* argv[])
             emptyFrameCount++;
             if(emptyFrameCount>=9)
             {
+                csvOut.close();
                 cout<<"fail to read frame from stream, or video ended.\n";
                 return EXIT_FAILURE;
             }
@@ -73,7 +100,7 @@ int main(int argc, char* argv[])
             continue;
         }
         emptyFrameCount=0;
-        
+        frame_number++;
         if(isFirstFrame) // first frame identification
         {
             bool success=img_proc(frame,filter_frame_L,filter_frame_R,true);
@@ -107,7 +134,7 @@ int main(int argc, char* argv[])
 #ifdef RECORD_RST
     output.release(); //output video
 #endif
-    
+    csvOut.close();
     return 0;
 }
 /*
@@ -170,6 +197,8 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     }
     draw_line(filter.origin_image, left_x, left_y);
     draw_line(filter.origin_image, right_x, right_y);
+    write_rst_to_csv(csvOut, left_x, left_y, frame_number);
+    write_rst_to_csv(csvOut, right_x, right_y, frame_number);
     //before passing the filter frames, initialize it.
     Mat fl(Size(filter.origin_image.cols,filter.origin_image.rows),CV_8UC1,Scalar(0));
     draw_spread_function(fl, left_x, left_y);
@@ -237,5 +266,6 @@ bool img_proc(Mat src, Mat&filter_frame_L, Mat&filter_frame_R,bool isFirst)
     resize(filter.origin_image, out, Size(1280,480));
     output<<out;
 #endif
+    
     return true;
 }

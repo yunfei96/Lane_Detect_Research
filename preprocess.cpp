@@ -94,6 +94,7 @@ void confirmation_filter_producer(Mat src,Mat&dst)
     Mat noshadow;
     merge(noshadowsplit, noshadow);
     Mat gray_img,contoursImg;
+    //cvtColor(src,gray_img,CV_BGR2GRAY);
     cvtColor(noshadow,gray_img,CV_BGR2GRAY);
     findDrawContours(gray_img,contoursImg);
     dst=contoursImg;
@@ -113,15 +114,23 @@ void preprocess::process(bool isFirst, Mat &input, int LowH, int HighH, int LowS
     //resize the image
 #ifdef REAL_ROAD_MODE
     image = input(Rect(0, input.rows / 4, input.cols, input.rows/4*3));
-    image = image(Rect(0, image.rows / 4, input.cols, image.rows/4*3));
+    image = image(Rect(0, image.rows / 5, image.cols, image.rows/5*4));
+    image = image(Rect(0, image.rows / 16, image.cols, image.rows/16*12));
 #endif
 #ifdef ROBOT_TEST_MODE
     image = input(Rect(0, input.rows / 2, input.cols, input.rows/2));
+    image = image(Rect(0, image.rows / 16, image.cols, image.rows/16*15));
+   // image = image(Rect(0, image.rows / 4, input.cols, image.rows/4*3));
+    //image = input(Rect(0, input.rows /2, input.cols, input.rows/2));
     int MAX_KERNEL_LENGTH = 10;
-    for ( int i = 1; i < MAX_KERNEL_LENGTH; i = i + 4 )
+    Mat src;
+    image.copyTo(src);
+    for ( int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2 )
     {
-        GaussianBlur( image, image, Size( i, i ), 0, 0 );
+        medianBlur( src, image, i );
+        //GaussianBlur( image, image, Size( i, i ), 0, 0 );
     }
+    imshow("out", image);
 #endif
     //
     image.copyTo(origin_image);
@@ -166,10 +175,10 @@ Mat preprocess::IPM(Mat input)
     int coValue=0;
     int value =0;
 #ifdef REAL_ROAD_MODE
-    value = 290*2;
+    value = 280*2;
 #endif
 #ifdef ROBOT_TEST_MODE
-    value = 270*2;
+    value = 240*2;
 #endif
     
     if(value<0)
